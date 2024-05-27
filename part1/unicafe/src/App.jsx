@@ -25,6 +25,8 @@ const Feedback = ({setTotalGood, setTotalNeutral, setTotalBad, totalGood, totalN
 const Statistics = ({totalGood, totalNeutral, totalBad}) => {
 
     const allVals = totalGood + totalNeutral + totalBad
+
+    if (allVals > 0) {
     return (
         <div id={"statistics"}>
             <h1>Statistics</h1>
@@ -34,6 +36,13 @@ const Statistics = ({totalGood, totalNeutral, totalBad}) => {
             <p>all {allVals}</p>
             <p>average {(totalGood + totalBad*-1)/(allVals)}</p>
             <p>positive {(allVals-totalBad-totalNeutral)/allVals*100}%</p>
+        </div>
+    )
+    }
+    return (
+        <div id={"statistics"}>
+            <h1>Statistics</h1>
+            <p>No feedback given</p>
         </div>
     )
 }
