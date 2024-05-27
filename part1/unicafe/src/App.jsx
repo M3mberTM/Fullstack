@@ -24,12 +24,16 @@ const Feedback = ({setTotalGood, setTotalNeutral, setTotalBad, totalGood, totalN
 
 const Statistics = ({totalGood, totalNeutral, totalBad}) => {
 
+    const allVals = totalGood + totalNeutral + totalBad
     return (
         <div id={"statistics"}>
             <h1>Statistics</h1>
             <p>good {totalGood}</p>
             <p>neutral {totalNeutral}</p>
             <p>bad {totalBad}</p>
+            <p>all {allVals}</p>
+            <p>average {(totalGood + totalBad*-1)/(allVals)}</p>
+            <p>positive {(allVals-totalBad-totalNeutral)/allVals*100}%</p>
         </div>
     )
 }
