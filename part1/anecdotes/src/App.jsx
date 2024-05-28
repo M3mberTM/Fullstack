@@ -1,12 +1,25 @@
-import { useState } from 'react'
+import {useState} from 'react'
 
 
-const Button = ({text, setNew, anecdotes}) => {
+const RandButton = ({text, setNew, anecdotes}) => {
     const handleClick = () => {
         const newIndex = Math.floor(Math.random() * anecdotes.length)
-        console.log(newIndex)
+
         setNew(newIndex)
     }
+    return (
+        <button onClick={handleClick}>{text}</button>
+    )
+}
+
+const VoteButton = ({text, setNewVotes, ogVotes, current}) => {
+    const handleClick = () => {
+        let copy = [...ogVotes]
+        copy[current] += 1
+
+        setNewVotes(copy)
+    }
+
     return (
         <button onClick={handleClick}>{text}</button>
     )
@@ -23,13 +36,15 @@ const App = () => {
         'The only way to go fast, is to go well.'
     ]
 
+    const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
     const [selected, setSelected] = useState(0)
 
     return (
         <div>
             {anecdotes[selected]}
             <br/>
-            <Button text={"next anecdote"} setNew={setSelected} anecdotes={anecdotes}></Button>
+            <VoteButton text={"vote"} setNewVotes={setVotes} ogVotes={votes} current={selected}></VoteButton>
+            <RandButton text={"next anecdote"} setNew={setSelected} anecdotes={anecdotes}></RandButton>
         </div>
     )
 }
