@@ -41,10 +41,13 @@ const App = () => {
 
     return (
         <div>
+            <h1>Anecdote of the day</h1>
             {anecdotes[selected]}
             <br/>
             <VoteButton text={"vote"} setNewVotes={setVotes} ogVotes={votes} current={selected}></VoteButton>
             <RandButton text={"next anecdote"} setNew={setSelected} anecdotes={anecdotes}></RandButton>
+            <h1>Anecdote with the most votes</h1>
+            <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
         </div>
     )
 }
