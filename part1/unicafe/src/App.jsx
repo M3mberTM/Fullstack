@@ -21,7 +21,11 @@ const Feedback = ({setTotalGood, setTotalNeutral, setTotalBad, totalGood, totalN
         </div>
     )
 }
-
+const StatisticLine = ({text, value}) => {
+    return (
+        <p>{text} {value}</p>
+    )
+}
 const Statistics = ({totalGood, totalNeutral, totalBad}) => {
 
     const allVals = totalGood + totalNeutral + totalBad
@@ -30,12 +34,12 @@ const Statistics = ({totalGood, totalNeutral, totalBad}) => {
     return (
         <div id={"statistics"}>
             <h1>Statistics</h1>
-            <p>good {totalGood}</p>
-            <p>neutral {totalNeutral}</p>
-            <p>bad {totalBad}</p>
-            <p>all {allVals}</p>
-            <p>average {(totalGood + totalBad*-1)/(allVals)}</p>
-            <p>positive {(allVals-totalBad-totalNeutral)/allVals*100}%</p>
+            <StatisticLine text={"good"} value={totalGood}/>
+            <StatisticLine text={"neutral"} value={totalNeutral}/>
+            <StatisticLine text={"bad"} value={totalBad}/>
+            <StatisticLine text={"all"} value={allVals}/>
+            <StatisticLine text={"average"} value={(totalGood + totalBad*-1)/(allVals)}/>
+            <StatisticLine text={"positive"} value={(allVals-totalBad-totalNeutral)/allVals*100}/>
         </div>
     )
     }
