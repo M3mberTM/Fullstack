@@ -1,3 +1,13 @@
+const Total = ({allExercises}) => {
+
+    let total = 0;
+    for (let i = 0; i < allExercises.length; i++) {
+        total += allExercises[i]
+    }
+    return (
+        <p>total of {total} exercises</p>
+    )
+}
 const Part = ({name, exercises}) => {
     return (
         <p>{name} {exercises}</p>
@@ -10,6 +20,9 @@ const Content = ({course}) => {
             {course.parts.map((part) => {
                 return <Part key={part.id} name={part.name} exercises={part.exercises}/>
             })}
+            <Total allExercises={course.parts.map((part) => {
+                return part.exercises
+            })}/>
         </div>
     )
 }
