@@ -1,9 +1,7 @@
 const Total = ({allExercises}) => {
 
-    let total = 0;
-    for (let i = 0; i < allExercises.length; i++) {
-        total += allExercises[i]
-    }
+    const total = allExercises.reduce((total, num) => total + num);
+
     return (
         <p>total of {total} exercises</p>
     )
