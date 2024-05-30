@@ -9,10 +9,26 @@ const App = () => {
 
         setNewName(event.target.value)
     }
+
     const handleSubmit = (event) => {
         event.preventDefault()
-        setPersons(persons.concat({name: newName}))
-        setNewName('')
+        const newPerson = {
+            name: newName
+        }
+        let objExists = false
+        for (let i = 0; i < persons.length; i++) {
+            if (persons[i].name === newPerson.name) {
+                objExists = true
+                break
+            }
+        }
+
+        if (objExists) {
+            alert(`${newPerson.name} is already added to phonebook`)
+        } else {
+            setPersons(persons.concat({name: newName}))
+            setNewName('')
+        }
     }
 
 
