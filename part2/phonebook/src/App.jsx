@@ -1,11 +1,50 @@
 import {useState} from 'react'
 
+
+const Filter = ({newFilter, handleFilterChange}) => {
+    return (
+        <div>filter show with <input value={newFilter} onChange={handleFilterChange}/></div>
+    )
+}
+
+const PersonForm = ({newName, handleNameChange, newPhone, handlePhoneChange, handleSubmit}) => {
+    return (
+        <form>
+            <div>
+                name: <input value={newName} onChange={handleNameChange}/>
+            </div>
+            <div>number: <input value={newPhone} onChange={handlePhoneChange}/></div>
+            <div>
+                <button type="submit" onClick={handleSubmit}>add</button>
+            </div>
+        </form>
+    )
+}
+
+const Persons = ({persons, newFilter}) => {
+    return (
+        <div>
+            {persons.map((person) => {
+                if (person.name.toLowerCase().includes(newFilter.toLowerCase())) {
+                    return <Person key={person.id} name={person.name} number={person.number}/>
+                }
+
+            })}
+        </div>
+    )
+}
+
+const Person = ({name, number}) => {
+    return (
+        <p>{name} {number}</p>
+    )
+}
 const App = () => {
     const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-123456', id: 1 },
-        { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-        { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-        { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+        {name: 'Arto Hellas', number: '040-123456', id: 1},
+        {name: 'Ada Lovelace', number: '39-44-5323523', id: 2},
+        {name: 'Dan Abramov', number: '12-43-234345', id: 3},
+        {name: 'Mary Poppendieck', number: '39-23-6423122', id: 4}
     ])
     const [newName, setNewName] = useState('')
     const [newPhone, setNewPhone] = useState('')
@@ -30,7 +69,7 @@ const App = () => {
         const newPerson = {
             name: newName,
             number: newPhone,
-            id: persons.length
+            id: persons.length + 1
         }
         let objExists = false
         for (let i = 0; i < persons.length; i++) {
@@ -53,24 +92,13 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>filter show with <input value={newFilter} onChange={handleFilterChange}/></div>
-            <h2>add a new</h2>
-            <form>
-                <div>
-                    name: <input value={newName} onChange={handleNameChange}/>
-                </div>
-                <div>number: <input value={newPhone} onChange={handlePhoneChange}/></div>
-                <div>
-                    <button type="submit" onClick={handleSubmit}>add</button>
-                </div>
-            </form>
-            <h2>Numbers</h2>
-            {persons.map((person) => {
-                if (person.name.toLowerCase().includes(newFilter.toLowerCase())) {
-                    return <p key={person.id}>{person.name} {person.number}</p>
-                }
+            <Filter newFilter={newFilter} handleFilterChange={handleFilterChange}/>
 
-            })}
+            <h2>add a new</h2>
+            <PersonForm handleSubmit={handleSubmit} handleNameChange={handleNameChange}
+                        handlePhoneChange={handlePhoneChange} newName={newName} newPhone={newPhone}/>
+            <h2>Numbers</h2>
+            <Persons newFilter={newFilter} persons={persons}/>
         </div>
     )
 }
