@@ -116,7 +116,23 @@ const App = () => {
         }
 
         if (objExists) {
-            alert(`${newPerson.name} is already added to phonebook`)
+            const originalPerson = persons.find(person => newPerson.name === person.name)
+            const updatedPerson = {...originalPerson, number: newPerson.number}
+
+            if (window.confirm(`${updatedPerson.name} is already added to the phonebook, replace the old number with a new one?`)) {
+                personsService.update(updatedPerson.id, updatedPerson)
+                    .then(response => {
+                        console.log("value was updated")
+                        setPersons(persons.map((person) => {
+                            return person.id !== response.data.id ? person : response.data
+                        }))
+                        setNewName('')
+                        setNewPhone('')
+                    })
+            } else {
+                console.log("Aborted update")
+            }
+
         } else {
             personsService.create(newPerson)
                 .then(response => {
