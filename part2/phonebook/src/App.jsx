@@ -9,6 +9,43 @@ const Filter = ({newFilter, handleFilterChange}) => {
     )
 }
 
+
+const Alert = ({alert}) => {
+    const error = {
+        color: "red",
+        background: "lightgrey",
+        fontSize: 20,
+        borderStyle: "solid",
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10
+    }
+
+    const notif = {
+        color: "green",
+        background: "lightgrey",
+        fontSize: 20,
+        borderStyle: "solid",
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10
+    }
+    if (alert.message !== null) {
+        return (
+            <div style={alert.isError ? error : notif}>
+                {alert.message}
+            </div>
+        )
+    } else {
+        return (
+            <div>
+
+            </div>
+        )
+    }
+
+}
+
 const PersonForm = ({newName, handleNameChange, newPhone, handlePhoneChange, handleSubmit}) => {
     return (
         <form>
@@ -69,6 +106,8 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newPhone, setNewPhone] = useState('')
     const [newFilter, setNewFilter] = useState('')
+    const [newAlert, setNewAlert] = useState({message: null, isError: true})
+
 
     const handleFilterChange = (event) => {
         const newFilterVal = event.target.value
@@ -89,9 +128,20 @@ const App = () => {
         if (window.confirm("Delete " + persons.find(p => p.id === id).name + "?")) {
             personsService.remove(id)
                 .then(response => {
+                    setNewAlert({message: `Deleted ${response.data.name}`, isError: false})
                     setPersons(persons.filter((val) => {
                         return val.id !== response.data.id
                     }))
+                    setTimeout(() => {
+                        setNewAlert({message: null, isError: false})
+                    }, 5000)
+                })
+                .catch(error => {
+                    setNewAlert({message: `${error}`, isError: true})
+
+                    setTimeout(() => {
+                        setNewAlert({message: null, isError: false})
+                    }, 5000)
                 })
         } else {
             console.log("Aborted deleting")
@@ -128,6 +178,12 @@ const App = () => {
                         }))
                         setNewName('')
                         setNewPhone('')
+
+                        setNewAlert({message: 'Value was updated', isError: false})
+
+                        setTimeout(() => {
+                            setNewAlert({message: null, isError: false})
+                        }, 5000)
                     })
             } else {
                 console.log("Aborted update")
@@ -139,6 +195,11 @@ const App = () => {
                     setPersons(persons.concat(response.data))
                     setNewName('')
                     setNewPhone('')
+                    setNewAlert({message: `Value was added ${response.data.name}`, isError: false})
+
+                    setTimeout(() => {
+                        setNewAlert({message: null, isError: false})
+                    }, 5000)
                 })
 
 
@@ -149,6 +210,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Alert alert={newAlert}/>
             <Filter newFilter={newFilter} handleFilterChange={handleFilterChange}/>
 
             <h2>add a new</h2>
