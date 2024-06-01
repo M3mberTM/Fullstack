@@ -11,7 +11,7 @@ const Form = ({val, handleCountryChange}) => {
     )
 }
 
-const CountryList = ({countries, filter, currentCountry, setCurrentCountry}) => {
+const CountryList = ({countries, filter, currentCountry, setCurrentCountry, handleShowCountry}) => {
     const countryNames = countries.map((country) => {
         return country.name.common
     })
@@ -32,7 +32,7 @@ const CountryList = ({countries, filter, currentCountry, setCurrentCountry}) => 
         return (
             <div>
                 {matchingCountries.map((country) => {
-                    return <Country key={country} name={country}/>
+                    return <Country key={country} name={country} handleShowCountry={(id) => handleShowCountry(id)}/>
                 })}
             </div>
         )
@@ -54,10 +54,12 @@ const CountryList = ({countries, filter, currentCountry, setCurrentCountry}) => 
     }
 }
 
-const Country = ({name}) => {
+const Country = ({name, handleShowCountry}) => {
 
     return (
-        <p>{name}</p>
+        <div>
+        {name} <button onClick={() => handleShowCountry(name)}>show</button>
+        </div>
     )
 }
 
@@ -102,6 +104,9 @@ function App() {
             })
     }, [])
 
+    const handleShowCountry = (id) => {
+        setNewFilter(id)
+    }
     const handleCountryChange = (event) => {
         setNewFilter(event.target.value)
 
@@ -112,7 +117,7 @@ function App() {
     return (<div>
             <Form val={newFilter} handleCountryChange={handleCountryChange}/>
             <CountryList countries={countries} filter={newFilter} currentCountry={currentCountry}
-                         setCurrentCountry={setCurrentCountry}/>
+                         setCurrentCountry={setCurrentCountry} handleShowCountry={(id) => handleShowCountry(id)}/>
         </div>
     )
 }
