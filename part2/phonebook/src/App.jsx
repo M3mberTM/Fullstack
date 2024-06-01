@@ -137,7 +137,13 @@ const App = () => {
                     }, 5000)
                 })
                 .catch(error => {
-                    setNewAlert({message: `${error}`, isError: true})
+                    setPersons(persons.filter((val => {
+                        return val.id !== id
+                    })))
+                    setNewAlert({
+                        message: `Information of ${persons.find(p => p.id === id).name} has already been removed from the server`,
+                        isError: true
+                    })
 
                     setTimeout(() => {
                         setNewAlert({message: null, isError: false})
