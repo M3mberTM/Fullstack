@@ -9,20 +9,17 @@ const getSpecific = (name) => {
     return axios.get(`${baseUrl}api/name/${name}`)
 }
 
-const create = newObject => {
-    return axios.post(baseUrl, newObject)
-}
-
-const update = (id, newObject) => {
-    return axios.put(`${baseUrl}/${id}`, newObject)
-}
-
-const remove = (id) => {
-    return axios.delete(`${baseUrl}/${id}`)
+const getWeather = (country) => {
+    const cityLatitude = country.capitalInfo.latlng[0]
+    const cityLongitude = country.capitalInfo.latlng[1]
+    const weatherAPIKey = import.meta.env.VITE_SOME_KEY
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${cityLatitude}&lon=${cityLongitude}&appid=${weatherAPIKey}&units=metric`
+    return axios.get(url)
 }
 
 export default {
     getAll,
-    getSpecific
+    getSpecific,
+    getWeather
 
 }

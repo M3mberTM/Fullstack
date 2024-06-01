@@ -11,7 +11,15 @@ const Form = ({val, handleCountryChange}) => {
     )
 }
 
-const CountryList = ({countries, filter, currentCountry, setCurrentCountry, handleShowCountry}) => {
+const CountryList = ({
+                         countries,
+                         filter,
+                         currentCountry,
+                         setCurrentCountry,
+                         handleShowCountry,
+                         cityWeather,
+                         setCityWeather
+                     }) => {
     const countryNames = countries.map((country) => {
         return country.name.common
     })
@@ -41,7 +49,8 @@ const CountryList = ({countries, filter, currentCountry, setCurrentCountry, hand
         return (
             <div>
                 <CountryInfo name={matchingCountries[0]} currentCountry={currentCountry}
-                             setCurrentCountry={setCurrentCountry}/>
+                             setCurrentCountry={setCurrentCountry} cityWeather={cityWeather}
+                             setCityWeather={setCityWeather}/>
             </div>
         )
     } else {
@@ -58,21 +67,31 @@ const Country = ({name, handleShowCountry}) => {
 
     return (
         <div>
-        {name} <button onClick={() => handleShowCountry(name)}>show</button>
+            {name}
+            <button onClick={() => handleShowCountry(name)}>show</button>
         </div>
     )
 }
 
-const CountryInfo = ({name, currentCountry, setCurrentCountry}) => {
+
+const CountryInfo = ({name, currentCountry, setCurrentCountry, cityWeather, setCityWeather}) => {
     useEffect(() => {
         countryService.getSpecific(name)
             .then(response => {
+                const curr = response.data
                 setCurrentCountry(response.data)
+                countryService.getWeather(curr)
+                    .then(response => {
+                        console.log("WEATHER API DATA")
+                        console.log(response.data)
+                        setCityWeather(response.data)
+                    })
             })
     }, [])
-    if (!currentCountry) {
+    if (!cityWeather) {
         return null
     }
+
 
     return (
         <div>
@@ -85,15 +104,23 @@ const CountryInfo = ({name, currentCountry, setCurrentCountry}) => {
                 return <li key={language}>{language}</li>
             })}
             <img src={currentCountry.flags.png} alt={currentCountry.flags.alt}/>
+            {/*weather api */}
+            <h2>Weather in {currentCountry.capital}</h2>
+            <p>temperature {cityWeather.main.temp}</p>
+            <img src={`https://openweathermap.org/img/wn/${cityWeather.weather[0].icon}@2x.png`}
+                 alt={cityWeather.weather[0].description}/>
+            <p>wind {cityWeather.wind.speed}m/s</p>
         </div>
 
-)
+    )
 }
 
 function App() {
     const [newFilter, setNewFilter] = useState('')
     const [countries, setCountries] = useState(null)
     const [currentCountry, setCurrentCountry] = useState(null)
+    const [cityWeather, setCityWeather] = useState(null)
+
 
     useEffect(() => {
         console.log('effect')
@@ -117,7 +144,9 @@ function App() {
     return (<div>
             <Form val={newFilter} handleCountryChange={handleCountryChange}/>
             <CountryList countries={countries} filter={newFilter} currentCountry={currentCountry}
-                         setCurrentCountry={setCurrentCountry} handleShowCountry={(id) => handleShowCountry(id)}/>
+                         setCurrentCountry={setCurrentCountry} handleShowCountry={(id) => handleShowCountry(id)}
+                         cityWeather={cityWeather} setCityWeather={setCityWeather}/>
+
         </div>
     )
 }
