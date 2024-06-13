@@ -94,8 +94,7 @@ const App = () => {
 
     useEffect(() => {
         console.log('effect')
-        axios
-            .get('http://localhost:3001/persons')
+        personsService.getAll()
             .then(response => {
                 console.log('promise fulfilled')
                 setPersons(response.data)
@@ -126,17 +125,20 @@ const App = () => {
     const handleDelete = (id) => {
         console.log(`deleting ${id}`)
         if (window.confirm("Delete " + persons.find(p => p.id === id).name + "?")) {
+            const personObj = persons.find(p => p.id === id)
             personsService.remove(id)
                 .then(response => {
-                    setNewAlert({message: `Deleted ${response.data.name}`, isError: false})
+                    setNewAlert({message: `Deleted ${personObj.name}`, isError: false})
                     setPersons(persons.filter((val) => {
-                        return val.id !== response.data.id
+                        return val.id !== id
                     }))
+                    console.log('Person should be removed')
                     setTimeout(() => {
                         setNewAlert({message: null, isError: false})
                     }, 5000)
                 })
                 .catch(error => {
+                    console.log("person isn't in the db anymore")
                     setPersons(persons.filter((val => {
                         return val.id !== id
                     })))
@@ -202,6 +204,13 @@ const App = () => {
                     setNewName('')
                     setNewPhone('')
                     setNewAlert({message: `Value was added ${response.data.name}`, isError: false})
+
+                    setTimeout(() => {
+                        setNewAlert({message: null, isError: false})
+                    }, 5000)
+                })
+                .catch(error => {
+                    setNewAlert({message: error.response.data.error, isError: true})
 
                     setTimeout(() => {
                         setNewAlert({message: null, isError: false})
