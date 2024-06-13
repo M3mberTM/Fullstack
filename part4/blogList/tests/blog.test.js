@@ -87,12 +87,23 @@ describe('total likes', () => {
 
 describe('favorite blog', () => {
 
-    test('when list has only one blog', () => {
+    test('when list has multiple blogs', () => {
         const result = listHelper.favoriteBlog(blogs)
         assert.deepStrictEqual(result, {
             title: "Canonical string reduction",
             author: "Edsger W. Dijkstra",
             likes: 12
+        })
+    })
+})
+
+describe('most blog author', () => {
+
+    test('when list has multiple blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        assert.deepStrictEqual(result, {
+            author: "Robert C. Martin",
+            blogs: 3
         })
     })
 })

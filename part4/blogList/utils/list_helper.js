@@ -27,8 +27,34 @@ const favoriteBlog = (blogs) => {
     }
 }
 
+const mostBlogs = (blogs) => {
+    const authors = {}
+
+    for (let i = 0; i < blogs.length; i++) {
+        if (Object.hasOwn(authors, blogs[i].author)) {
+            authors[blogs[i].author] = authors[blogs[i].author] + 1
+        } else {
+            authors[blogs[i].author] = 1
+        }
+    }
+
+    console.log(authors)
+    let topAuthor = {blogs: -99}
+    Object.keys(authors).forEach((val) => {
+        if (topAuthor.blogs < authors[val]) {
+            topAuthor = {
+                author: val,
+                blogs: authors[val]
+            }
+        }
+    })
+    return topAuthor
+
+}
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
