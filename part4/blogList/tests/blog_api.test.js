@@ -100,6 +100,25 @@ describe('Deleting of blogs', () => {
     })
 })
 
+describe('Updating of blogs', () => {
+
+    const newBlog = {
+        title: "Updated",
+        author: "test",
+        url: "aaa.com",
+        likes: 15
+    }
+    test('Checking if blog is correctly updated', async () => {
+        const result = await api.get('/api/blogs')
+        const updatedVal = await api.put(`/api/blogs/${result.body[0].id}`).send(newBlog)
+
+        for (let property of Object.keys(newBlog)) {
+            assert.strictEqual(updatedVal.body[property],newBlog[property])
+        }
+
+    })
+})
+
 describe('Input testing', () => {
 
     const missingLikesBlog = {
