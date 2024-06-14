@@ -48,4 +48,42 @@ describe("Getting methods of blog - /api/blogs", () => {
 
         assert.strictEqual(response.body.length, 2)
     })
+
+    test('Checking that the Blog Object has id property', async () => {
+        const response = await api.get('/api/blogs')
+
+        for (let blog of response.body) {
+
+            assert(Object.hasOwn(blog, 'id'))
+        }
+
+    })
+})
+
+describe("Posting of blogs - /api/blogs", () => {
+
+    const newBlog = {
+        title: "posted new note",
+        author: "test",
+        url: "aaa.com",
+        likes: 15
+    }
+
+    test('Checking if posting successfully adds to the database', async () => {
+        await api.post('/api/blogs').send(newBlog)
+
+        const response = await api.get('/api/blogs')
+        assert.strictEqual(response.body.length, initialBlogs.length + 1)
+    })
+
+    test('Checking that posted content equals that in the database', async () => {
+
+        const response = await api.post('/api/blogs').send(newBlog)
+        assert.strictEqual(response.body.title, newBlog.title)
+    })
+
+})
+
+after(async () => {
+    await mongoose.connection.close()
 })
