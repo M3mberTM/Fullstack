@@ -3,7 +3,6 @@ const Blog = require('../models/blog')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const listHelper = require("../utils/list_helper");
 const assert = require("node:assert");
 
 const api = supertest(app)
@@ -83,6 +82,24 @@ describe("Posting of blogs - /api/blogs", () => {
 
 })
 
+describe('Deleting of blogs', () => {
+
+    test('Checking if deleting content works', async () => {
+        const result = await api.get('/api/blogs')
+        const dbBlogs = result.body
+        await api.del(`/api/blogs/${dbBlogs[0].id}`).expect(204)
+    })
+
+    test('Checking if deleting content removes from the database', async () => {
+        const result = await api.get('/api/blogs')
+        const dbBlogs = result.body
+        await api.del(`/api/blogs/${dbBlogs[0].id}`)
+        const newResult = await api.get('/api/blogs')
+        const newDbBlogs = newResult.body
+        assert.strictEqual(newDbBlogs.length, initialBlogs.length - 1)
+    })
+})
+
 describe('Input testing', () => {
 
     const missingLikesBlog = {
@@ -121,6 +138,8 @@ describe('Input testing', () => {
     })
 
 })
+
+
 
 after(async () => {
     await mongoose.connection.close()
