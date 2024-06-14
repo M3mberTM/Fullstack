@@ -23,7 +23,6 @@ const initialBlogs = [
     },
 ]
 
-// ...
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -86,16 +85,41 @@ describe("Posting of blogs - /api/blogs", () => {
 
 describe('Input testing', () => {
 
-    const newBlog = {
+    const missingLikesBlog = {
         title: "posted new note",
         author: "test",
         url: "aaa.com"
     }
 
+    const missingInfoBlogs = [
+        {
+            author: "test",
+            url: "aaa.com"
+        },
+        {
+            title: 'aljsdf',
+            author: 'richard',
+            likes: 10
+        },
+        {
+            author: 'missingNo'
+
+        }
+    ]
+
     test('Likes property defaults to 0 if it isnt provided', async () => {
-        const response = await api.post('/api/blogs').send(newBlog)
+        const response = await api.post('/api/blogs').send(missingLikesBlog)
         assert.strictEqual(response.body.likes, 0)
     })
+
+    test('Error if title or url is missing in a blog', async () => {
+
+        for (let blog of missingInfoBlogs) {
+            await api.post('/api/blogs').send(blog).expect(400)
+
+        }
+    })
+
 })
 
 after(async () => {
