@@ -84,6 +84,20 @@ describe("Posting of blogs - /api/blogs", () => {
 
 })
 
+describe('Input testing', () => {
+
+    const newBlog = {
+        title: "posted new note",
+        author: "test",
+        url: "aaa.com"
+    }
+
+    test('Likes property defaults to 0 if it isnt provided', async () => {
+        const response = await api.post('/api/blogs').send(newBlog)
+        assert.strictEqual(response.body.likes, 0)
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
