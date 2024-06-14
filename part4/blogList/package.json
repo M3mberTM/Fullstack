@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
-    "test": "node --test"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test node --test",
+    "dev": "NODE_ENV=development nodemon index.js"
   },
   "author": "Richard Svajdlenka",
   "license": "ISC",
@@ -19,6 +18,8 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.3"
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.3",
+    "supertest": "^7.0.0"
   }
 }
