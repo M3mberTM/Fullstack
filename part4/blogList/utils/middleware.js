@@ -1,4 +1,5 @@
 const logger = require('./logger')
+const {request} = require("express");
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({error: 'unknown endpoint'})
@@ -23,6 +24,22 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
+
+        return authorization.replace('Bearer ', '')
+    }
+    return null
+}
+
+
+const tokenExtractor = (request, response, next) => {
+
+    request.token = getTokenFrom(request)
+    next()
+}
+
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method)
     logger.info('Path:  ', request.path)
@@ -32,5 +49,5 @@ const requestLogger = (request, response, next) => {
 }
 
 module.exports = {
-    unknownEndpoint, errorHandler, requestLogger
+    unknownEndpoint, errorHandler, requestLogger, tokenExtractor
 }
