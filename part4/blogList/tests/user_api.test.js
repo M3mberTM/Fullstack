@@ -97,7 +97,7 @@ describe('User creation validation testing', () => {
     test('Checking adding of new users', async () => {
 
         for (let user of validUsers) {
-            await api.post('/api/users').send(user).expect(201)
+            const result = await api.post('/api/users').send(user).expect(201)
                 .expect('Content-Type', /application\/json/)
         }
 
