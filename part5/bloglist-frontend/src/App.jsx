@@ -11,9 +11,7 @@ const App = () => {
     const [user, setUser] = useState(null)
     const [password, setPassword] = useState("")
     const [username, setUsername] = useState("")
-    const [title, setTitle] = useState("")
-    const [url, setUrl] = useState("")
-    const [author, setAuthor] = useState("")
+
     const [notification, setNotification] = useState(null)
 
     useEffect(() => {
@@ -60,22 +58,20 @@ const App = () => {
         setUser(null)
     }
 
-    const handleNewBlog = async (event) => {
-        event.preventDefault()
-        console.log('Creating new blog', author, title, url)
+    const handleNewBlog = async (blog) => {
+
+        console.log('Creating new blog', blog.author, blog.title, blog.url)
 
         try {
-            await blogService.create({title, author, url})
+            await blogService.create(blog)
 
             console.log('created new blog')
 
-            setNotification({text: `A new blog: ${title} by ${author} was created`, isError: false})
+            setNotification({text: `A new blog: ${blog.title} by ${blog.author} was created`, isError: false})
             setTimeout(() => {
                 setNotification(null)
             }, 5000)
-            setTitle('')
-            setAuthor('')
-            setUrl('')
+
             const newBlogs = await blogService.getAll()
             setBlogs(newBlogs)
         } catch (exception) {
@@ -100,8 +96,7 @@ const App = () => {
     return (
         <div id={"main"}>
             {notification !== null && <Notification text={notification.text} isError={notification.isError}/>}
-            <BlogList blogs={blogs} user={user} handleLogout={handleLogout} author={author} setAuthor={setAuthor}
-                      title={title} setTitle={setTitle} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog}/>
+            <BlogList blogs={blogs} user={user} handleLogout={handleLogout} handleNewBlog={handleNewBlog}/>
         </div>
     )
 }
