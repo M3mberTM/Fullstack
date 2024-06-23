@@ -83,6 +83,16 @@ const App = () => {
 
     }
 
+    const handleBlogDelete = async (blog) => {
+        if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+            const response = await blogService.remove(blog.id)
+            console.log('Removed blog')
+            setBlogs(blogs.filter((val) => {
+                return val.id !== blog.id
+            }))
+        }
+    }
+
     const handleNewBlog = async (blog) => {
 
         console.log('Creating new blog', blog.author, blog.title, blog.url)
@@ -122,7 +132,7 @@ const App = () => {
         <div id={"main"}>
             {notification !== null && <Notification text={notification.text} isError={notification.isError}/>}
             <BlogList blogs={blogs} user={user} handleLogout={handleLogout} handleNewBlog={handleNewBlog}
-                      handleLike={handleLike}/>
+                      handleLike={handleLike} handleDelete={handleBlogDelete}/>
         </div>
     )
 }
