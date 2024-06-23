@@ -17,6 +17,7 @@ const App = () => {
     useEffect(() => {
         const getAll = async () => {
             const blogs = await blogService.getAll()
+            blogs.sort((a,b)=> {return b.likes - a.likes})
             setBlogs(blogs)
         }
         getAll()
@@ -70,6 +71,7 @@ const App = () => {
             const response = await blogService.update(newBlog)
             console.log('Response:', response)
             const newBlogs = await blogService.getAll()
+            newBlogs.sort((a, b)=> {return b.likes - a.likes})
             setBlogs(newBlogs)
 
 
