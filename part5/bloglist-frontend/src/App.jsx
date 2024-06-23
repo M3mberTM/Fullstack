@@ -58,6 +58,29 @@ const App = () => {
         setUser(null)
     }
 
+    const handleLike = async (blog) => {
+        console.log('adding like to:', blog)
+        const newBlog = {
+            ...blog,
+            likes: blog.likes + 1,
+            user: blog.user.id
+        }
+
+        try {
+            const response = await blogService.update(newBlog)
+            console.log('Response:', response)
+            const newBlogs = await blogService.getAll()
+            setBlogs(newBlogs)
+
+
+        } catch (e) {
+            console.log('Something went wrong')
+            console.log(e)
+        }
+
+
+    }
+
     const handleNewBlog = async (blog) => {
 
         console.log('Creating new blog', blog.author, blog.title, blog.url)
@@ -96,7 +119,8 @@ const App = () => {
     return (
         <div id={"main"}>
             {notification !== null && <Notification text={notification.text} isError={notification.isError}/>}
-            <BlogList blogs={blogs} user={user} handleLogout={handleLogout} handleNewBlog={handleNewBlog}/>
+            <BlogList blogs={blogs} user={user} handleLogout={handleLogout} handleNewBlog={handleNewBlog}
+                      handleLike={handleLike}/>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import Blog from "./Blog.jsx";
 import BlogForm from "./BlogForm.jsx";
 import Toggleable from "./Toggleable.jsx";
 
-const BlogList = ({blogs, user, handleLogout, handleNewBlog}) => {
+const BlogList = ({blogs, user, handleLogout, handleNewBlog, handleLike}) => {
 
     return <div id={"blogList"}>
         <h1>blogs</h1>
@@ -13,7 +13,7 @@ const BlogList = ({blogs, user, handleLogout, handleNewBlog}) => {
         </Toggleable>
         <h3>Created Blogs</h3>
         {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog}/>
+            <Blog key={blog.id} blog={blog} handleLike={handleLike}/>
         )}
     </div>
 }
