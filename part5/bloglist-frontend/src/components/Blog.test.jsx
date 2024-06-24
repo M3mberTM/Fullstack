@@ -4,18 +4,26 @@ import Blog from "./Blog.jsx";
 
 
 describe("Rendering without events", () => {
-    test('renders content', () => {
 
-        const blog = {
-            title: "Content",
-            author: "Richard",
-            url: "youtube.com",
-            likes: 40,
-            user: {
-                username: "m3mber"
-            }
+    let container
+    const blog = {
+        title: "Content",
+        author: "Richard",
+        url: "youtube.com",
+        likes: 40,
+        user: {
+            username: "m3mber"
         }
-        render(<Blog blog={blog}/>)
+    }
+
+
+    beforeEach(() => {
+        container = render(
+            <Blog blog={blog}/>
+        ).container
+    })
+
+    test('renders content', () => {
 
         const title = screen.getByText(blog.title, {exact: false})
         const author = screen.getByText(blog.author, {exact: false})
@@ -24,17 +32,6 @@ describe("Rendering without events", () => {
     })
 
     test("doesn't render toggleable content", () => {
-
-        const blog = {
-            title: "Content",
-            author: "Richard",
-            url: "youtube.com",
-            likes: 40,
-            user: {
-                username: "m3mber"
-            }
-        }
-        const {container} = render(<Blog blog={blog}/>)
 
         const element = container.querySelector(".note")
 
@@ -46,17 +43,25 @@ describe("Rendering without events", () => {
 
 describe("Rendering with user events", () => {
 
-    test("Url and likes are rendered after toggling the element", async () => {
-        const blog = {
-            title: "Content",
-            author: "Richard",
-            url: "youtube.com",
-            likes: 40,
-            user: {
-                username: "m3mber"
-            }
+    let container
+    const blog = {
+        title: "Content",
+        author: "Richard",
+        url: "youtube.com",
+        likes: 40,
+        user: {
+            username: "m3mber"
         }
-        const {container} = render(<Blog blog={blog}/>)
+    }
+
+
+    beforeEach(() => {
+        container = render(
+            <Blog blog={blog}/>
+        ).container
+    })
+
+    test("Url and likes are rendered after toggling the element", async () => {
 
         const user = userEvent.setup()
         const button = container.querySelector(".blogToggleButton")
@@ -72,7 +77,36 @@ describe("Rendering with user events", () => {
 
 describe('Event handlers', () => {
 
-    test('Like handling', () => {
+    let container
+    const blog = {
+        title: "Content",
+        author: "Richard",
+        url: "youtube.com",
+        likes: 40,
+        user: {
+            username: "m3mber"
+        }
+    }
+    const likeHandler = vi.fn()
 
+
+    beforeEach(() => {
+
+        container = render(
+            <Blog blog={blog} handleLike={likeHandler}/>
+        ).container
+    })
+
+    test('Like handling', async () => {
+
+        const user = userEvent.setup()
+        const toggleButton = container.querySelector('.blogToggleButton')
+        await user.click(toggleButton)
+
+        const likeButton = container.querySelector('.likeButton')
+        await user.click(likeButton)
+        await user.click(likeButton)
+
+        expect(likeHandler.mock.calls).toHaveLength(2)
     })
 })
