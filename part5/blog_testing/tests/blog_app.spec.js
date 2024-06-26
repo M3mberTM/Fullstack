@@ -131,4 +131,42 @@ describe('When logged in', () => {
         await expect(page.getByRole('button', {name: 'View'})).not.toBeVisible()
 
     })
+
+    test('only user who created a blog can delete it', async({page,request}) => {
+
+        const newUser = {
+            username: "test",
+            name: "testing",
+            password: "password",
+            blogs: []
+        }
+
+        // create the new user to log in with later
+        await request.post('http://localhost:3003/api/users', {
+            data: newUser
+        })
+
+        const blog = {
+            title: "Checking user priviledges",
+            author: "testing program",
+            url: "test.com"
+        }
+        // creation of blog
+        await createBlog(page, blog.title, blog.author, blog.url)
+        await page.getByRole('button', {name: 'View'}).waitFor()
+
+        // log out of the user who created the blog
+        await page.getByRole('button', {name: 'Log out'}).click()
+
+        // log into the new user
+        await login(page, newUser.username, newUser.password)
+        await page.getByText(`${newUser.username} is logged in`).waitFor()
+
+        // find the blog and check if the remove button is missing
+        await page.getByRole('button', {name: 'View'}).click()
+
+        await expect(page.getByRole('button', {name: 'Remove'})).not.toBeVisible()
+
+
+    })
 })

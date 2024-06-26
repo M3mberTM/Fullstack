@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-const Blog = ({blog, handleLike, handleDelete}) => {
+const Blog = ({blog, handleLike, handleDelete, user}) => {
     const [isInfoVisible, setInfoVisible] = useState(false)
 
     const blogStyle = {
@@ -10,6 +10,9 @@ const Blog = ({blog, handleLike, handleDelete}) => {
         borderWidth: 1,
         marginBottom: 5
     }
+
+
+
 
 
     if (!isInfoVisible) {
@@ -35,7 +38,8 @@ const Blog = ({blog, handleLike, handleDelete}) => {
                 <br/>
                 {blog.user.username}
                 <br/>
-                <button className={"blogToggleButton"} onClick={() => handleDelete(blog)}>Remove</button>
+                {user.username === blog.user.username && <button className={"blogToggleButton"} onClick={() => handleDelete(blog)}>Remove</button>}
+
             </div>
         )
     }

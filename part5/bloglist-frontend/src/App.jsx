@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect, useRef} from 'react'
 import Login from './components/Login.jsx'
 import blogService from './services/blogs'
 import loginService from './services/login.js'
@@ -31,6 +31,8 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogFormRef = useRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -94,7 +96,7 @@ const App = () => {
   }
 
   const handleNewBlog = async (blog) => {
-
+    blogFormRef.current.toggleVisibility()
     console.log('Creating new blog', blog.author, blog.title, blog.url)
 
     try {
@@ -118,6 +120,9 @@ const App = () => {
     }
 
   }
+
+
+
   if (user === null) {
     return <div id={'main'}>
       {notification !== null && <Notification text={notification.text} isError={notification.isError}/>}
@@ -132,7 +137,7 @@ const App = () => {
     <div id={'main'}>
       {notification !== null && <Notification text={notification.text} isError={notification.isError}/>}
       <BlogList blogs={blogs} user={user} handleLogout={handleLogout} handleNewBlog={handleNewBlog}
-        handleLike={handleLike} handleDelete={handleBlogDelete}/>
+        handleLike={handleLike} handleDelete={handleBlogDelete} blogFormRef={blogFormRef}/>
     </div>
   )
 }
