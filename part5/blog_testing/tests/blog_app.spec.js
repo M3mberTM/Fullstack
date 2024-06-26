@@ -13,7 +13,6 @@ describe('Blog app', () => {
         })
 
 
-
         await page.goto('http://localhost:5173')
     })
 
@@ -113,7 +112,7 @@ describe('When logged in', () => {
         await expect(page.getByText("Likes: 1")).toBeVisible()
     })
 
-    test('blog can be deleted', async({page}) => {
+    test('blog can be deleted', async ({page}) => {
 
         const blog = {
             title: "to be deleted",
@@ -132,7 +131,7 @@ describe('When logged in', () => {
 
     })
 
-    test('only user who created a blog can delete it', async({page,request}) => {
+    test('only user who created a blog can delete it', async ({page, request}) => {
 
         const newUser = {
             username: "test",
@@ -166,6 +165,43 @@ describe('When logged in', () => {
         await page.getByRole('button', {name: 'View'}).click()
 
         await expect(page.getByRole('button', {name: 'Remove'})).not.toBeVisible()
+
+    })
+
+    test('blogs are arranged from most to least amount of likes', async ({page}) => {
+
+        // create two blogs
+
+        const firstBlog = {
+            title: "more likes",
+            author: "testing program",
+            url: "test.com"
+        }
+
+        const secondBlog = {
+            title: "less likes",
+            author: "testing program",
+            url: "test.com"
+        }
+        // create the blogs and open them
+        await createBlog(page, secondBlog.title, secondBlog.author, secondBlog.url)
+        await page.getByRole('button', {name: 'View'}).waitFor()
+        await page.getByRole('button', {name: 'View'}).click()
+
+
+        await createBlog(page, firstBlog.title, firstBlog.author, firstBlog.url)
+        await page.getByText(`${firstBlog.title} - by ${firstBlog.author}`).waitFor()
+        await page.getByRole('button', {name: 'View'}).click()
+
+
+
+        // like the second post
+        const likeButtons = await page.getByRole('button', {name: 'Like'}).all()
+        await likeButtons[1].click()
+
+        //check if the second post is now in the first place
+        const blogs = await page.locator(".note").all()
+        await expect(blogs[0].filter({hasText: `${firstBlog.title} - by ${firstBlog.author}`})).toBeVisible()
 
 
     })

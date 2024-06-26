@@ -4,7 +4,6 @@ import Toggleable from './Toggleable.jsx'
 
 const BlogList = ({ blogs, user, handleLogout, handleNewBlog, handleLike, handleDelete, blogFormRef }) => {
 
-
   return <div id={'blogList'}>
     <h1>blogs</h1>
     <p>{user.username} is logged in <button onClick={handleLogout}>Log out</button></p>
