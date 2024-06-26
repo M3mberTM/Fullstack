@@ -51,4 +51,41 @@ describe('Blog app', () => {
             await expect(page.getByText("Wrong username or password")).toBeVisible()
         })
     })
+
+    describe('When logged in', () => {
+        const correctUser = {
+            username: "m3mber",
+            name: "Richard",
+            password: "tryout123",
+            blogs: []
+        }
+
+        beforeEach(async ({page}) => {
+            await page.locator("#loginUsernameInput").fill(correctUser.username)
+            await page.locator('#loginPasswordInput').fill(correctUser.password)
+            await page.getByRole('button', {name: "Log in"}).click()
+            await page.getByText(`${correctUser.username} is logged in`).waitFor()
+        })
+
+        test('a new blog can be created', async ({page}) => {
+            const blog = {
+                title: "E2E testing",
+                author: "testing program",
+                url: "test.com"
+            }
+
+
+            await page.getByRole('button', {name: "new note"}).click() // click the initial button to show the form
+
+            // fill in the form fields
+            await page.locator("#titleInput").fill(blog.title)
+            await page.locator("#authorInput").fill(blog.author)
+            await page.locator("#urlInput").fill(blog.url)
+            await page.getByRole('button', {name: "Create"}).click()
+
+            // await page.getByText(`${blog.title} - by ${blog.author}`).waitFor()
+            // test for whether the blog was created
+            await expect(page.getByText(`${blog.title} - by ${blog.author}`)).toBeVisible()
+        })
+    })
 })
