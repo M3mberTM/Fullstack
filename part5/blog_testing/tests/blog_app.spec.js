@@ -1,8 +1,8 @@
 const {test, expect, beforeEach, describe} = require('@playwright/test')
-
+const {login, createBlog} = require('./helper')
 describe('Blog app', () => {
     beforeEach(async ({page, request}) => {
-        await request.post('http:localhost:3003/api/testing/reset')
+        await request.post('http://localhost:3003/api/testing/reset')
         await request.post('http://localhost:3003/api/users', {
             data: {
                 username: "m3mber",
@@ -36,56 +36,78 @@ describe('Blog app', () => {
             password: "password"
         }
         test('succeeds with correct credentials', async ({page}) => {
-            await page.locator("#loginUsernameInput").fill(correctUser.username)
-            await page.locator('#loginPasswordInput').fill(correctUser.password)
-            await page.getByRole('button', {name: "Log in"}).click()
+
+            await login(page, correctUser.username, correctUser.password)
             await page.getByText(`${correctUser.username} is logged in`).waitFor()
+
+
             await expect(page.getByText(`${correctUser.username} is logged in`)).toBeVisible()
         })
 
         test('fails with wrong credentials', async ({page}) => {
-            await page.locator("#loginUsernameInput").fill(incorrectUser.username)
-            await page.locator('#loginPasswordInput').fill(incorrectUser.password)
-            await page.getByRole('button', {name: "Log in"}).click()
 
+            await login(page, incorrectUser.username, incorrectUser.password)
             await expect(page.getByText("Wrong username or password")).toBeVisible()
         })
     })
 
-    describe('When logged in', () => {
-        const correctUser = {
-            username: "m3mber",
-            name: "Richard",
-            password: "tryout123",
-            blogs: []
+
+})
+
+describe('When logged in', () => {
+    const correctUser = {
+        username: "m3mber",
+        name: "Richard",
+        password: "tryout123",
+        blogs: []
+    }
+
+    beforeEach(async ({page, request}) => {
+        await request.post('http://localhost:3003/api/testing/reset')
+
+        await request.post('http://localhost:3003/api/users', {
+            data: {
+                username: "m3mber",
+                name: "Richard",
+                password: "tryout123",
+                blogs: []
+            }
+        })
+
+        await page.goto('http://localhost:5173')
+
+        await login(page, correctUser.username, correctUser.password)
+        await page.getByText(`${correctUser.username} is logged in`).waitFor()
+    })
+
+    test('a new blog can be created', async ({page}) => {
+
+        const blog = {
+            title: "E2E testing",
+            author: "testing program",
+            url: "test.com"
         }
 
-        beforeEach(async ({page}) => {
-            await page.locator("#loginUsernameInput").fill(correctUser.username)
-            await page.locator('#loginPasswordInput').fill(correctUser.password)
-            await page.getByRole('button', {name: "Log in"}).click()
-            await page.getByText(`${correctUser.username} is logged in`).waitFor()
-        })
+        await createBlog(page, blog.title, blog.author, blog.url)
+        await page.getByText(`${blog.title} - by ${blog.author}`).waitFor()
+        // test for whether the blog was created
+        await expect(page.getByText(`${blog.title} - by ${blog.author}`)).toBeVisible()
+    })
 
-        test('a new blog can be created', async ({page}) => {
-            const blog = {
-                title: "E2E testing",
-                author: "testing program",
-                url: "test.com"
-            }
+    test('blog can be liked', async ({page}) => {
 
+        const blog = {
+            title: "Liking a blog",
+            author: "testing program",
+            url: "test.com"
+        }
 
-            await page.getByRole('button', {name: "new note"}).click() // click the initial button to show the form
+        await createBlog(page, blog.title, blog.author, blog.url)
+        await page.getByRole('button', {name: 'View'}).waitFor()
 
-            // fill in the form fields
-            await page.locator("#titleInput").fill(blog.title)
-            await page.locator("#authorInput").fill(blog.author)
-            await page.locator("#urlInput").fill(blog.url)
-            await page.getByRole('button', {name: "Create"}).click()
+        await page.getByRole('button', {name: 'View'}).click()
+        await page.getByRole('button', {name: "Like"}).click()
 
-            // await page.getByText(`${blog.title} - by ${blog.author}`).waitFor()
-            // test for whether the blog was created
-            await expect(page.getByText(`${blog.title} - by ${blog.author}`)).toBeVisible()
-        })
+        await expect(page.getByText("Likes: 1")).toBeVisible()
     })
 })
