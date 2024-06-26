@@ -12,6 +12,8 @@ describe('Blog app', () => {
             }
         })
 
+
+
         await page.goto('http://localhost:5173')
     })
 
@@ -109,5 +111,24 @@ describe('When logged in', () => {
         await page.getByRole('button', {name: "Like"}).click()
 
         await expect(page.getByText("Likes: 1")).toBeVisible()
+    })
+
+    test('blog can be deleted', async({page}) => {
+
+        const blog = {
+            title: "to be deleted",
+            author: "testing program",
+            url: "test.com"
+        }
+        // creation of the blog
+        await createBlog(page, blog.title, blog.author, blog.url)
+        await page.getByRole('button', {name: 'View'}).waitFor()
+
+        await page.getByRole('button', {name: 'View'}).click()
+        page.on('dialog', dialog => dialog.accept())
+        await page.getByRole('button', {name: 'Remove'}).click()
+
+        await expect(page.getByRole('button', {name: 'View'})).not.toBeVisible()
+
     })
 })
