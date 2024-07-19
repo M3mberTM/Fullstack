@@ -15,8 +15,7 @@ const anecdoteReducer = createSlice({
             return editedState.toSorted((a, b) => b.votes - a.votes)
         },
         createNote(state, action) {
-            const content = action.payload
-            state.push({content, votes: 0, id: getId()})
+            state.push(action.payload)
         },
         setNotes(state, action) {
             return action.payload
