@@ -1,64 +1,70 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import {useQuery} from "@tanstack/react-query";
-import {getAnecdotes} from "./services/anecdotes.js";
+import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {getAnecdotes, update} from "./services/anecdotes.js";
 
 const App = () => {
 
-  const handleVote = (anecdote) => {
-    console.log('vote')
-  }
+    const client = useQueryClient()
+    const updateAnecdoteMut = useMutation({mutationFn: update, onSuccess: () => {
+        client.invalidateQueries({queryKey: ['anecdotes']})
+        }})
+
+    const handleVote = (anecdote) => {
+        const newAnecdote = {...anecdote, votes: anecdote.votes + 1}
+        updateAnecdoteMut.mutate(newAnecdote)
+    }
 
 
-  const result = useQuery({
-      queryKey: ['anecdotes'],
-      queryFn: getAnecdotes,
-      retry: false
-  })
+    const result = useQuery({
+        queryKey: ['anecdotes'],
+        queryFn: getAnecdotes,
+        retry: false
+    })
 
 
-  const anecdotes = result.data
+    const anecdotes = result.data
 
-  if (result.isError) {
+    if (result.isError) {
+        return (
+            <div>
+                <p>Anecdote service not available due to problems in the server</p>
+            </div>
+        )
+    }
+
+    if (result.isLoading) {
+        return (
+            <div>
+                <h3>Anecdote app</h3>
+
+                <Notification />
+                <AnecdoteForm />
+                <p>Anecdotes are loading...</p>
+            </div>
+        )
+    }
+
     return (
         <div>
-          <p>Anecdote service not available due to problems in the server</p>
+            <h3>Anecdote app</h3>
+
+            <Notification />
+            <AnecdoteForm />
+
+            {anecdotes.map(anecdote =>
+                <div key={anecdote.id}>
+                    <div>
+                        {anecdote.content}
+                    </div>
+                    <div>
+                        has {anecdote.votes}
+                        <button onClick={() => handleVote(anecdote)}>vote</button>
+                    </div>
+                </div>
+            )}
         </div>
     )
-  }
-
-  if (result.isLoading) {
-    return (
-        <div>
-          <h3>Anecdote app</h3>
-
-          <Notification />
-          <AnecdoteForm />
-          <p>Anecdotes are loading...</p>
-        </div>
-    )
-  }
-
-  return (
-    <div>
-      <h3>Anecdote app</h3>
-    
-      <Notification />
-      <AnecdoteForm />
-    
-      {anecdotes.map(anecdote =>
-        <div key={anecdote.id}>
-          <div>
-            {anecdote.content}
-          </div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => handleVote(anecdote)}>vote</button>
-          </div>
-        </div>
-      )}
-    </div>
-  )
 }
 
 export default App
