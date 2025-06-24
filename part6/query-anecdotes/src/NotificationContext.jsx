@@ -6,6 +6,8 @@ const notifReducer = (state, action) => {
             return `Anecdote "${action.payload}" was added`
         case "VOTE":
             return `Anecdote "${action.payload}" was voted on`
+        case "ERR":
+            return 'Too short. Anecdote must have length of 5 or more'
         case "REM":
             return undefined
         default:
