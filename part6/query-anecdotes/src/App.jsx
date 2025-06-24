@@ -22,11 +22,7 @@ const App = () => {
   if (result.isError) {
     return (
         <div>
-          <h3>Anecdote app</h3>
-
-          <Notification />
-          <AnecdoteForm />
-          <p>Something went wrong!</p>
+          <p>Anecdote service not available due to problems in the server</p>
         </div>
     )
   }
