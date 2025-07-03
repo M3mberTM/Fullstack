@@ -4,14 +4,17 @@ import blogService from './services/blogs'
 import loginService from './services/login.js'
 import BlogList from './components/BlogList.jsx'
 import Notification from './components/Notification.jsx'
+import {useSelector, useDispatch} from "react-redux";
+import {makeNotification} from "./reducers/notificationReducer.js";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [user, setUser] = useState(null)
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
-
-    const [notification, setNotification] = useState(null)
+    const dispatch = useDispatch()
+    // const [notification, setNotification] = useState(null)
+    const notification = useSelector(state => state.notification)
 
     useEffect(() => {
         const getAll = async () => {
@@ -48,13 +51,10 @@ const App = () => {
             setPassword('')
             console.log('logged in')
         } catch (exception) {
-            setNotification({
+            dispatch(makeNotification({
                 text: 'Wrong username or password',
                 isError: true,
-            })
-            setTimeout(() => {
-                setNotification(null)
-            }, 5000)
+            }, 5))
             console.log('Wrong credentials')
         }
     }
@@ -89,7 +89,7 @@ const App = () => {
 
     const handleBlogDelete = async (blog) => {
         if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-            const response = await blogService.remove(blog.id)
+            await blogService.remove(blog.id)
             console.log('Removed blog')
             setBlogs(
                 blogs.filter((val) => {
@@ -108,24 +108,17 @@ const App = () => {
 
             console.log('created new blog')
 
-            setNotification({
+            dispatch(makeNotification({
                 text: `A new blog: ${blog.title} by ${blog.author} was created`,
                 isError: false,
-            })
-            setTimeout(() => {
-                setNotification(null)
-            }, 5000)
-
+            }, 5))
             const newBlogs = await blogService.getAll()
             setBlogs(newBlogs)
         } catch (exception) {
-            setNotification({
+            dispatch(makeNotification({
                 text: "Couldn't create a new blog",
                 isError: true,
-            })
-            setTimeout(() => {
-                setNotification(null)
-            }, 5000)
+            }, 5))
             console.log('Something went wrong')
         }
     }
@@ -133,7 +126,7 @@ const App = () => {
     if (user === null) {
         return (
             <div id={'main'}>
-                {notification !== null && (
+                {notification && (
                     <Notification
                         text={notification.text}
                         isError={notification.isError}
@@ -153,7 +146,7 @@ const App = () => {
 
     return (
         <div id={'main'}>
-            {notification !== null && (
+            {notification && (
                 <Notification
                     text={notification.text}
                     isError={notification.isError}
