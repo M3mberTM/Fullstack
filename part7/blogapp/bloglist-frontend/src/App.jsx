@@ -7,15 +7,16 @@ import Notification from './components/Notification.jsx'
 import {useSelector, useDispatch} from "react-redux";
 import {makeNotification} from "./reducers/notificationReducer.js";
 import {setBlogs} from "./reducers/blogReducer.js";
+import {setUser} from "./reducers/userReducer.js";
 
 const App = () => {
-    const [user, setUser] = useState(null)
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
     // redux thingies
     const dispatch = useDispatch()
     const notification = useSelector(state => state.notification)
     const blogs = useSelector(state => state.blogs)
+    const user = useSelector(state => state.user)
 
     useEffect(() => {
         blogService.getAll().then((blogs) => {
@@ -30,7 +31,7 @@ const App = () => {
         const loggedUser = window.localStorage.getItem('loggedInUser')
         if (loggedUser) {
             const user = JSON.parse(loggedUser)
-            setUser(user)
+            dispatch(setUser(user))
             blogService.setToken(user.token)
         }
     }, [])
@@ -45,7 +46,7 @@ const App = () => {
 
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             blogService.setToken(user.token)
-            setUser(user)
+            dispatch(setUser(user))
             setUsername('')
             setPassword('')
             console.log('logged in')
@@ -61,7 +62,7 @@ const App = () => {
     const handleLogout = () => {
         console.log('logging out')
         window.localStorage.removeItem('loggedInUser')
-        setUser(null)
+        dispatch(setUser(null))
     }
 
     const handleLike = async (blog) => {
