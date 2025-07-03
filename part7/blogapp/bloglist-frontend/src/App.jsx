@@ -6,25 +6,24 @@ import BlogList from './components/BlogList.jsx'
 import Notification from './components/Notification.jsx'
 import {useSelector, useDispatch} from "react-redux";
 import {makeNotification} from "./reducers/notificationReducer.js";
+import {setBlogs} from "./reducers/blogReducer.js";
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
     const [user, setUser] = useState(null)
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
+    // redux thingies
     const dispatch = useDispatch()
-    // const [notification, setNotification] = useState(null)
     const notification = useSelector(state => state.notification)
+    const blogs = useSelector(state => state.blogs)
 
     useEffect(() => {
-        const getAll = async () => {
-            const blogs = await blogService.getAll()
-            blogs.sort((a, b) => {
+        blogService.getAll().then((blogs) => {
+            const sorted = blogs.toSorted((a,b) => {
                 return b.likes - a.likes
             })
-            setBlogs(blogs)
-        }
-        getAll().then()
+            dispatch(setBlogs(sorted))
+        })
     }, [])
 
     useEffect(() => {
@@ -80,7 +79,7 @@ const App = () => {
             newBlogs.sort((a, b) => {
                 return b.likes - a.likes
             })
-            setBlogs(newBlogs)
+            dispatch(setBlogs(newBlogs))
         } catch (e) {
             console.log('Something went wrong')
             console.log(e)
@@ -91,11 +90,11 @@ const App = () => {
         if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
             await blogService.remove(blog.id)
             console.log('Removed blog')
-            setBlogs(
+            dispatch(setBlogs(
                 blogs.filter((val) => {
                     return val.id !== blog.id
                 })
-            )
+            ))
         }
     }
 
@@ -113,7 +112,7 @@ const App = () => {
                 isError: false,
             }, 5))
             const newBlogs = await blogService.getAll()
-            setBlogs(newBlogs)
+            dispatch(setBlogs(newBlogs))
         } catch (exception) {
             dispatch(makeNotification({
                 text: "Couldn't create a new blog",
