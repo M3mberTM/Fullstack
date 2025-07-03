@@ -4,10 +4,7 @@ import Toggleable from './Toggleable.jsx'
 
 const BlogList = ({
     blogs,
-    user,
     handleNewBlog,
-    handleLike,
-    handleDelete,
     blogFormRef,
 }) => {
     return (
@@ -21,9 +18,6 @@ const BlogList = ({
                 <Blog
                     key={blog.id}
                     blog={blog}
-                    handleLike={handleLike}
-                    handleDelete={handleDelete}
-                    user={user}
                 />
             ))}
         </div>

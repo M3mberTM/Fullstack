@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import {Link} from "react-router-dom";
 
-const Blog = ({ blog, handleLike, handleDelete, user }) => {
-    const [isInfoVisible, setInfoVisible] = useState(false)
+const Blog = ({ blog }) => {
 
     const blogStyle = {
         paddingTop: 10,
@@ -11,46 +10,13 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
         marginBottom: 5,
     }
 
-    if (!isInfoVisible) {
-        return (
-            <div style={blogStyle} className={'note'}>
-                <div>
-                    {blog.title} - by {blog.author}
-                    <button
-                        className={'blogToggleButton'}
-                        onClick={() => setInfoVisible(true)}>
-                        View
-                    </button>
-                </div>
+    return (
+        <div style={blogStyle} className={'note'}>
+            <div>
+                <Link to={`/blogs/${blog.id}`}>{blog.title} - by {blog.author}</Link>
             </div>
-        )
-    } else {
-        return (
-            <div style={blogStyle} className={'note'}>
-                {blog.title} - by {blog.author}
-                <button onClick={() => setInfoVisible(false)}>Hide</button>
-                <br />
-                {blog.url}
-                <br />
-                Likes: {blog.likes}
-                <button
-                    className={'likeButton'}
-                    onClick={() => handleLike(blog)}>
-                    Like
-                </button>
-                <br />
-                {blog.user.username}
-                <br />
-                {user.username === blog.user.username && (
-                    <button
-                        className={'blogToggleButton'}
-                        onClick={() => handleDelete(blog)}>
-                        Remove
-                    </button>
-                )}
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default Blog

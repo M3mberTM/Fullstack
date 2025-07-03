@@ -12,6 +12,7 @@ import Header from "./components/Header.jsx";
 import Users from "./components/Users.jsx";
 import UserService from './services/users.js'
 import User from "./components/User.jsx";
+import BlogDetails from "./components/BlogDetails.jsx";
 
 const App = () => {
     // redux thingies
@@ -21,8 +22,12 @@ const App = () => {
     const loggedUser = useSelector(state => state.user.loggedUser)
     const users = useSelector(state => state.user.users)
 
-    const match = useMatch('/users/:id')
-    const pickedUser = match ? users.find(user => user.id === match.params.id) : null
+    // parametrized url setups
+    const userMatch = useMatch('/users/:id')
+    const pickedUser = userMatch ? users.find(user => user.id === userMatch.params.id) : null
+
+    const blogMatch = useMatch("/blogs/:id")
+    const pickedBlog = blogMatch ? blogs.find(blog => blog.id === blogMatch.params.id) : null
 
     useEffect(() => {
         blogService.getAll().then((blogs) => {
@@ -147,16 +152,13 @@ const App = () => {
                         <Route path={"/"} element={
                             <BlogList
                                 blogs={blogs}
-                                user={loggedUser}
-                                handleLogout={handleLogout}
                                 handleNewBlog={handleNewBlog}
-                                handleLike={handleLike}
-                                handleDelete={handleBlogDelete}
                                 blogFormRef={blogFormRef}
                             />
                         }/>
                         <Route path={"/users"} element={<Users users={users}/>}/>
                         <Route path={"/users/:id"} element={<User userObject={pickedUser}/>}/>
+                        <Route path={"/blogs/:id"} element={<BlogDetails handleRemove={handleBlogDelete} handleLike={handleLike} blogObject={pickedBlog}/>}/>
                     </Routes>
             }
 
