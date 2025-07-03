@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import Login from './components/Login.jsx'
+import { useEffect, useRef } from 'react'
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import blogService from './services/blogs'
 import loginService from './services/login.js'
 import BlogList from './components/BlogList.jsx'
@@ -8,10 +8,10 @@ import {useSelector, useDispatch} from "react-redux";
 import {makeNotification} from "./reducers/notificationReducer.js";
 import {setBlogs} from "./reducers/blogReducer.js";
 import {setUser} from "./reducers/userReducer.js";
+import Header from "./components/Header.jsx";
+import Users from "./components/Users.jsx";
 
 const App = () => {
-    const [password, setPassword] = useState('')
-    const [username, setUsername] = useState('')
     // redux thingies
     const dispatch = useDispatch()
     const notification = useSelector(state => state.notification)
@@ -38,8 +38,7 @@ const App = () => {
 
     const blogFormRef = useRef()
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
+    const login = async (username, password) => {
         console.log('logging in with', username, password)
         try {
             const user = await loginService.login({ username, password })
@@ -47,8 +46,6 @@ const App = () => {
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             blogService.setToken(user.token)
             dispatch(setUser(user))
-            setUsername('')
-            setPassword('')
             console.log('logged in')
         } catch (exception) {
             dispatch(makeNotification({
@@ -123,27 +120,6 @@ const App = () => {
         }
     }
 
-    if (user === null) {
-        return (
-            <div id={'main'}>
-                {notification && (
-                    <Notification
-                        text={notification.text}
-                        isError={notification.isError}
-                    />
-                )}
-
-                <Login
-                    username={username}
-                    setUsername={setUsername}
-                    password={password}
-                    setPassword={setPassword}
-                    handleLogin={handleLogin}
-                />
-            </div>
-        )
-    }
-
     return (
         <div id={'main'}>
             {notification && (
@@ -152,15 +128,26 @@ const App = () => {
                     isError={notification.isError}
                 />
             )}
-            <BlogList
-                blogs={blogs}
-                user={user}
-                handleLogout={handleLogout}
-                handleNewBlog={handleNewBlog}
-                handleLike={handleLike}
-                handleDelete={handleBlogDelete}
-                blogFormRef={blogFormRef}
-            />
+            <Header handleLogin={login} user={user} handleLogout={handleLogout}/>
+            {user !== null &&
+                <Router>
+                    <Routes>
+                        <Route path={"/"} element={
+                            <BlogList
+                                blogs={blogs}
+                                user={user}
+                                handleLogout={handleLogout}
+                                handleNewBlog={handleNewBlog}
+                                handleLike={handleLike}
+                                handleDelete={handleBlogDelete}
+                                blogFormRef={blogFormRef}
+                            />
+                        }/>
+                        <Route path={"/users"} element={<Users/>}/>
+                    </Routes>
+                </Router>
+            }
+
         </div>
     )
 }
