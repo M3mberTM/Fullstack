@@ -1,22 +1,14 @@
-import { useEffect, useState } from 'react'
-import UserService from '../services/users.js'
+import {Link, useNavigate} from "react-router-dom";
 
-const Users = () => {
-    const [users, setUsers] = useState([])
-    useEffect(() => {
-        UserService.getAll().then((data) => {
-            console.log('Retrieved users: ', data)
-            setUsers(data)
-        })
-    }, [])
+const Users = ({users}) => {
 
     if (users.length < 1) {
-    return (
-        <div id={'userlist'}>
-            <h2>Users</h2>
-            <p>Loading users...</p>
-        </div>
-    )}
+        return (
+            <div id={'userlist'}>
+                <h2>Users</h2>
+                <p>Loading users...</p>
+            </div>
+        )}
 
     return (
         <div id={'userlist'}>
@@ -31,7 +23,7 @@ const Users = () => {
                 <tbody>
                 {users.map((user)=> {
                     return (<tr key={user.id}>
-                        <td>{user.username}</td>
+                        <td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
                         <td>{user.blogs.length}</td>
                     </tr>)
                 })}

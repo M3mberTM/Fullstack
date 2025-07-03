@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import {Routes, Route, useMatch} from "react-router-dom";
 import blogService from './services/blogs'
 import loginService from './services/login.js'
 import BlogList from './components/BlogList.jsx'
@@ -7,16 +7,22 @@ import Notification from './components/Notification.jsx'
 import {useSelector, useDispatch} from "react-redux";
 import {makeNotification} from "./reducers/notificationReducer.js";
 import {setBlogs} from "./reducers/blogReducer.js";
-import {setUser} from "./reducers/userReducer.js";
+import {setLoggedUser, setUsers} from "./reducers/userReducer.js";
 import Header from "./components/Header.jsx";
 import Users from "./components/Users.jsx";
+import UserService from './services/users.js'
+import User from "./components/User.jsx";
 
 const App = () => {
     // redux thingies
     const dispatch = useDispatch()
     const notification = useSelector(state => state.notification)
     const blogs = useSelector(state => state.blogs)
-    const user = useSelector(state => state.user)
+    const loggedUser = useSelector(state => state.user.loggedUser)
+    const users = useSelector(state => state.user.users)
+
+    const match = useMatch('/users/:id')
+    const pickedUser = match ? users.find(user => user.id === match.params.id) : null
 
     useEffect(() => {
         blogService.getAll().then((blogs) => {
@@ -31,9 +37,16 @@ const App = () => {
         const loggedUser = window.localStorage.getItem('loggedInUser')
         if (loggedUser) {
             const user = JSON.parse(loggedUser)
-            dispatch(setUser(user))
+            dispatch(setLoggedUser(user))
             blogService.setToken(user.token)
         }
+    }, [])
+
+    useEffect(() => {
+        UserService.getAll().then((data) => {
+            console.log('Retrieved users: ', data)
+            dispatch(setUsers(data))
+        })
     }, [])
 
     const blogFormRef = useRef()
@@ -45,7 +58,7 @@ const App = () => {
 
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             blogService.setToken(user.token)
-            dispatch(setUser(user))
+            dispatch(setLoggedUser(user))
             console.log('logged in')
         } catch (exception) {
             dispatch(makeNotification({
@@ -59,7 +72,7 @@ const App = () => {
     const handleLogout = () => {
         console.log('logging out')
         window.localStorage.removeItem('loggedInUser')
-        dispatch(setUser(null))
+        dispatch(setLoggedUser(null))
     }
 
     const handleLike = async (blog) => {
@@ -128,14 +141,13 @@ const App = () => {
                     isError={notification.isError}
                 />
             )}
-            <Header handleLogin={login} user={user} handleLogout={handleLogout}/>
-            {user !== null &&
-                <Router>
+            <Header handleLogin={login} user={loggedUser} handleLogout={handleLogout}/>
+            {loggedUser !== null &&
                     <Routes>
                         <Route path={"/"} element={
                             <BlogList
                                 blogs={blogs}
-                                user={user}
+                                user={loggedUser}
                                 handleLogout={handleLogout}
                                 handleNewBlog={handleNewBlog}
                                 handleLike={handleLike}
@@ -143,9 +155,9 @@ const App = () => {
                                 blogFormRef={blogFormRef}
                             />
                         }/>
-                        <Route path={"/users"} element={<Users/>}/>
+                        <Route path={"/users"} element={<Users users={users}/>}/>
+                        <Route path={"/users/:id"} element={<User userObject={pickedUser}/>}/>
                     </Routes>
-                </Router>
             }
 
         </div>
