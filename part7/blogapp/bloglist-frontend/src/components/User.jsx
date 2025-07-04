@@ -1,22 +1,27 @@
+import {Typography, List, ListItem, ListItemText, ListItemIcon, Paper} from "@mui/material";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const User = ({userObject}) => {
 
     if (!userObject) {
         return (
             <div id={"user"}>
-                <h3>No user found</h3>
+                <Typography variant={'h4'}>No user found</Typography>
             </div>
         )
     }
     return (
-        <div id={"user"}>
-            <h2>{userObject.username}</h2>
-            <h3>added blogs</h3>
-            <ul>
+        <div id={"user"} style={{marginTop: "10px"}}>
+            <Typography variant={'h4'}>{userObject.username}</Typography>
+            <Typography variant={'h6'}>added blogs</Typography>
+            <List dense={true} component={Paper}>
                 {userObject.blogs.map((blog)=> {
-                    return <li key={blog.id}>{blog.title}</li>
+                    return <ListItem key={blog.id}>
+                        <ListItemIcon><ArrowForwardIosIcon/></ListItemIcon>
+                        <ListItemText primary={blog.title}/>
+                    </ListItem>
                 })}
-            </ul>
+            </List>
         </div>
     )
 }

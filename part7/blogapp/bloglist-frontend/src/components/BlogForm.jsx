@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import {TextField, Typography, Button} from "@mui/material";
 
 const BlogForm = ({ handleNewBlog }) => {
     const [title, setTitle] = useState('')
@@ -22,8 +23,10 @@ const BlogForm = ({ handleNewBlog }) => {
         <div id={'blogForm'}>
             <form onSubmit={createBlog}>
                 <div>
-                    Title
-                    <input
+                    <Typography>Title: {' '}
+                    <TextField
+                        size={'small'}
+                        variant={"standard"}
                         id={'titleInput'}
                         placeholder={'title'}
                         type={'text'}
@@ -31,12 +34,14 @@ const BlogForm = ({ handleNewBlog }) => {
                         value={title}
                         onChange={({ target }) =>
                             setTitle(target.value)
-                        }></input>
+                        }></TextField></Typography>
                 </div>
 
                 <div>
-                    Author
-                    <input
+                    <Typography>Author: {' '}
+                    <TextField
+                        size={'small'}
+                        variant={'standard'}
                         id={'authorInput'}
                         placeholder={'author'}
                         type={'text'}
@@ -44,22 +49,24 @@ const BlogForm = ({ handleNewBlog }) => {
                         value={author}
                         onChange={({ target }) =>
                             setAuthor(target.value)
-                        }></input>
+                        }></TextField></Typography>
                 </div>
 
                 <div>
-                    Url
-                    <input
+                    <Typography>Url: {' '}
+                    <TextField
+                        size={'small'}
+                        variant={"standard"}
                         id={'urlInput'}
                         placeholder={'url'}
                         type={'text'}
                         name={'url'}
                         value={url}
-                        onChange={({ target }) => setUrl(target.value)}></input>
+                        onChange={({ target }) => setUrl(target.value)}></TextField></Typography>
                 </div>
-                <button id={'blogFormSubmit'} type={'submit'}>
+                <Button size={'small'}  variant={'outlined'} id={'blogFormSubmit'} type={'submit'}>
                     Create
-                </button>
+                </Button>
             </form>
         </div>
     )

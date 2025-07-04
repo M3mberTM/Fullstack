@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 import {useState} from "react";
+import {Typography, Button, TextField} from "@mui/material";
+
 const Login = ({
     login,
 }) => {
@@ -17,30 +19,32 @@ const Login = ({
     return (
         <div id={'loginForm'}>
             <form onSubmit={handleLogin}>
-                <h1>Log into the application</h1>
+                <Typography variant={'h4'}>Log into the application</Typography>
                 <div>
-                    Username
-                    <input
+                    <Typography>Username</Typography>
+                    <TextField
+                        size={'small'}
                         id={'loginUsernameInput'}
                         type={'text'}
                         name={'Username'}
                         value={username}
                         onChange={({ target }) =>
                             setUsername(target.value)
-                        }></input>
+                        }></TextField>
                 </div>
                 <div>
-                    Password
-                    <input
+                    <Typography>Password</Typography>
+                    <TextField
+                        size={'small'}
                         id={'loginPasswordInput'}
                         type={'text'}
                         name={'Password'}
                         value={password}
                         onChange={({ target }) =>
                             setPassword(target.value)
-                        }></input>
+                        }></TextField>
                 </div>
-                <button type={'submit'}>Log in</button>
+                <Button variant={'contained'} type={'submit'}>Log in</Button>
             </form>
         </div>
     )

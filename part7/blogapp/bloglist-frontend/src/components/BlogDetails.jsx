@@ -1,5 +1,6 @@
 import {useSelector} from "react-redux";
 import {useState} from "react";
+import {Link, Typography, Button, TextField, List, ListItem, ListItemText, Paper} from "@mui/material";
 
 const BlogDetails = ({blogObject, handleLike, handleRemove, comments, handleNewComment}) => {
 
@@ -17,29 +18,31 @@ const BlogDetails = ({blogObject, handleLike, handleRemove, comments, handleNewC
     if (!blogObject) {
         return (
             <div id={"blogDetail"}>
-                <h3>Unfortunately, we couldn't find your blog</h3>
+                <Typography variant={"h4"}>Unfortunately, we couldn't find your blog</Typography>
             </div>
         )
     }
 
     return (
-        <div id={"blogDetail"}>
-            <h2>{blogObject.title} - {blogObject.author}</h2>
-            <a href={blogObject.url}>{blogObject.url}</a>
-            <p>{blogObject.likes} likes <button onClick={() => handleLike(blogObject)}>Like</button></p>
-            <p>Added by {blogObject.user.username}</p>
-            <h3>comments</h3>
+        <div id={"blogDetail"} style={{marginTop: '10px'}}>
+            <Typography variant={'h4'}>{blogObject.title} - {blogObject.author}</Typography>
+            <Link href={blogObject.url}>{blogObject.url}</Link>
+            <Typography variant={'body1'}>{blogObject.likes} likes <Button variant={'contained'} size={'small'} onClick={() => handleLike(blogObject)}>Like</Button></Typography>
+            <Typography variant={'body1'}>Added by {blogObject.user.username}</Typography>
+            <Typography variant={'h5'}>comments</Typography>
             <form onSubmit={handleAddComment}>
-                <input placeholder={"content"} name={"content"} value={content} onChange={({target}) => setContent(target.value)}/>
-                <button type={"submit"}>Add comment</button>
+                <TextField variant={'outlined'} size={'small'} placeholder={"content"} name={"content"} value={content} onChange={({target}) => setContent(target.value)}/>
+                <Button variant={'contained'} size={'medium'} type={"submit"}>Add comment</Button>
             </form>
-            <ul>
-                {comments.map((comment) => {
-                    return <li key={comment.id}>{comment.content}</li>
-                })}
-            </ul>
+            {comments.length > 0 &&
+                <List component={Paper}>
+                    {comments.map((comment) => {
+                        return <ListItem key={comment.id}><ListItemText primary={comment.content}/></ListItem>
+                    })}
+                </List>
+            }
             {loggedUser.username === blogObject.user.username &&
-                <button onClick={() => handleRemove(blogObject)}>Remove</button>
+                <Button variant={'contained'} onClick={() => handleRemove(blogObject)}>Remove Blog</Button>
             }
         </div>
     )

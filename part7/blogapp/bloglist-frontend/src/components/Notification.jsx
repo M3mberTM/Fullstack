@@ -1,3 +1,5 @@
+import {Alert} from '@mui/material'
+
 const Notification = ({ text, isError }) => {
     const notifStyle = {
         borderStyle: 'solid',
@@ -25,12 +27,14 @@ const Notification = ({ text, isError }) => {
         paddingTop: 15,
     }
 
+    if (isError) {
+        return (
+            <Alert id={'notification'} severity={"error"}>{text}</Alert>
+        )
+    }
+
     return (
-        <div
-            id={'notification'}
-            style={isError === true ? errorStyle : notifStyle}>
-            {text}
-        </div>
+        <Alert id={'notification'} severity={'success'}>{text}</Alert>
     )
 }
 

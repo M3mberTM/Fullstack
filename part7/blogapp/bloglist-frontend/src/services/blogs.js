@@ -9,7 +9,7 @@ const getAll = async () => {
 
 const create = async (newObject) => {
     const config = {
-        headers: { Authorization: utilService },
+        headers: { Authorization: utilService.getToken() },
     }
 
     const response = await axios.post(baseUrl, newObject, config)
@@ -23,7 +23,7 @@ const update = async (newObject) => {
 
 const remove = async (id) => {
     const config = {
-        headers: { Authorization: utilService },
+        headers: { Authorization: utilService.getToken() },
     }
 
     const response = await axios.delete(`${baseUrl}/${id}`, config)

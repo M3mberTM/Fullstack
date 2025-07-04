@@ -16,6 +16,8 @@ import UserService from './services/users.js'
 import User from './components/User.jsx'
 import BlogDetails from './components/BlogDetails.jsx'
 import {setComments} from "./reducers/commentReducer.js";
+// MUI imports
+import {Container} from '@mui/material'
 
 const App = () => {
     // redux thingies
@@ -205,7 +207,7 @@ const App = () => {
     }
 
     return (
-        <div id={'main'}>
+        <Container id={'main'}>
             <Header
                 handleLogin={login}
                 user={loggedUser}
@@ -248,7 +250,7 @@ const App = () => {
                     />
                 </Routes>
             )}
-        </div>
+        </Container>
     )
 }
 

@@ -1,5 +1,6 @@
 import Login from "./Login.jsx";
 import {Link} from "react-router-dom";
+import {AppBar, Button, IconButton, Toolbar, Typography} from "@mui/material";
 
 const Header = ({user, handleLogout, handleLogin}) => {
 
@@ -15,18 +16,20 @@ const Header = ({user, handleLogout, handleLogin}) => {
    }
 
     return (
-        <div id={"header"} style={{display: "flex", backgroundColor: "#94bdff"}}>
-            <div>
-                <Link to={"/"} style={{marginRight: "5px"}}>Blogs</Link>
-                <Link to={"/users"} style={{marginRight: "5px"}}>Users</Link>
-            </div>
-            <div>
-                <p style={{margin: "0"}}>
-                    {user.username} is currently logged in{' '}
-                    <button onClick={handleLogout}>Log out</button>
-                </p>
-            </div>
-        </div>
+        <AppBar id={"header"} position={"static"}>
+            <Toolbar>
+                <div style={{flexGrow: 1}}>
+                    <Button color={"inherit"} component={Link} to={"/"}>
+                        Blogs
+                    </Button>
+                    <Button color={"inherit"} component={Link} to={"/users"}>
+                        Users
+                    </Button>
+                </div>
+                <Typography sx={{marginRight: "5px"}}>{user.username} is currently logged in</Typography>
+                <Button onClick={handleLogout} color={"inherit"} variant={"outlined"}>Log out</Button>
+            </Toolbar>
+        </AppBar>
     )
 
 }
