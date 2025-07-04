@@ -72,6 +72,39 @@ const App = () => {
 
     const blogFormRef = useRef()
 
+    const handleNewComment = async (blogId, content) => {
+        console.log('Creating new comment: ', content)
+
+        try {
+            await commentService.create({blog: blogId, content: content})
+
+            console.log('created new comment')
+
+            dispatch(
+                makeNotification(
+                    {
+                        text: `New comment was created: ${content}`,
+                        isError: false,
+                    },
+                    5
+                )
+            )
+            const newComments = await commentService.getAll()
+            dispatch(setComments(newComments))
+        } catch (exception) {
+            dispatch(
+                makeNotification(
+                    {
+                        text: "Couldn't create a new comment",
+                        isError: true,
+                    },
+                    5
+                )
+            )
+            console.log('Something went wrong')
+        }
+    }
+
     const login = async (username, password) => {
         console.log('logging in with', username, password)
         try {
@@ -173,17 +206,17 @@ const App = () => {
 
     return (
         <div id={'main'}>
+            <Header
+                handleLogin={login}
+                user={loggedUser}
+                handleLogout={handleLogout}
+            />
             {notification && (
                 <Notification
                     text={notification.text}
                     isError={notification.isError}
                 />
             )}
-            <Header
-                handleLogin={login}
-                user={loggedUser}
-                handleLogout={handleLogout}
-            />
             {loggedUser !== null && (
                 <Routes>
                     <Route
@@ -209,6 +242,7 @@ const App = () => {
                                 handleLike={handleLike}
                                 blogObject={pickedBlog}
                                 comments={pickedComments}
+                                handleNewComment={handleNewComment}
                             />
                         }
                     />
