@@ -49,7 +49,11 @@ const Authors = (props) => {
         <form onSubmit={changeBirthYear}>
           <div>
             name:
-            <input name={'name'}/>
+            <select name={'name'}>
+              {authors.map((a)=> {
+                return <option key={a.id}>{a.name}</option>
+              })}
+            </select>
           </div>
           <div>
             birth year:
