@@ -1,6 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
+const {GraphQLError} = require('graphql')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
 const mongoose = require('mongoose')
@@ -150,22 +151,54 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       const currAuthor = await Author.findOne({name: args.author})
-      if (!currAuthor) {
-        const author = Author({name: args.author})
-        await author.save()
-        const book = Book({...args, author: author._id})
-        return book.save()
-      } else {
-        const book = Book({...args, author: currAuthor._id})
-        return book.save()
+      let newAuthor = null
+        if (!currAuthor) {
+          const author = Author({name: args.author})
+          try {
+            await author.save()
+          } catch (error) {
+            throw new GraphQLError('Saving author failed', {
+              extensions: {
+                code: 'BAD_USER_INPUT',
+                invalidArgs: args.author,
+                error
+              }
+            })
+          }
+          newAuthor = author
+        } else {
+          newAuthor = currAuthor
+        }
+      const book = Book({...args, author: newAuthor._id})
+      try {
+        await book.save()
+      } catch(error){
+        throw new GraphQLError('Saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title,
+            error
+          }
+        })
       }
+      return book
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({name: args.name})
-      author.born = args.setBornTo
-      if (author) {
-        return author.save()
+      try {
+        author.born = args.setBornTo
+        await author.save()
+      } catch (error) {
+        throw new GraphQLError('Editing author failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error
+          }
+        })
       }
+
+      return author
     }
   }
 }
