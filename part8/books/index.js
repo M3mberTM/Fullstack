@@ -134,15 +134,11 @@ const resolvers = {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      // let fittingBooks = books.slice()
-      // if (args.author) {
-      //   fittingBooks = fittingBooks.filter((b) => b.author === args.author)
-      // }
-      // if (args.genre) {
-      //   fittingBooks = fittingBooks.filter((b) => b.genres.includes(args.genre))
-      // }
-      // return fittingBooks
-      return Book.find({})
+      let bookFilter = {}
+      if (args.genre) {
+        bookFilter = {...bookFilter, genres: args.genre}
+      }
+      return Book.find(bookFilter)
     },
     allAuthors: async () => {
       return Author.find({})
@@ -164,14 +160,12 @@ const resolvers = {
         return book.save()
       }
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((a)=> a.name === args.name)
-      if (!author) {
-        return null
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({name: args.name})
+      author.born = args.setBornTo
+      if (author) {
+        return author.save()
       }
-      const editedAuthor = {...author, born: args.setBornTo}
-      authors = authors.map((a)=> a.name === args.name ? editedAuthor : a)
-      return editedAuthor
     }
   }
 }
