@@ -37,6 +37,7 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     me: User
+    allGenres: [String!]!
   }
   
   type Author {
@@ -89,6 +90,11 @@ const resolvers = {
     me: (root, args, context) => {
       console.log('current user: ', context.currentUser)
       return context.currentUser
+    },
+    allGenres: async () => {
+      const books = await Book.find({})
+      const genres = new Set(books.map((a) => a.genres).flat())
+      return [...genres]
     }
   },
   Author: {

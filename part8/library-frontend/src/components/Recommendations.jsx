@@ -8,7 +8,6 @@ const Recommendations = ({show}) => {
     }
 
     const meRequest = useQuery(ME, {fetchPolicy: "no-cache"})
-    console.log(meRequest)
     const me = meRequest.loading ? null : meRequest.data.me
     const favoriteGenre = me ? me.favoriteGenre : null
     const result = useQuery(ALL_BOOKS, {variables: {genre: favoriteGenre}, skip: !me})
