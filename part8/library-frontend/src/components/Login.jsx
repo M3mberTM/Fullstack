@@ -1,11 +1,11 @@
-import {LOGIN} from "../queries.js";
+import {ALL_BOOKS, LOGIN} from "../queries.js";
 import {useMutation} from "@apollo/client";
 import {useEffect} from "react";
 const Login = ({show, handleTokenAdd, notifyError}) => {
     if (!show) {
        return null
     }
-    const [login, result] = useMutation(LOGIN, {onError: (error) => notifyError(error.graphQLErrors[0].message)})
+    const [login, result] = useMutation(LOGIN, {refetchQueries: [{query: ALL_BOOKS}], onError: (error) => notifyError(error.graphQLErrors[0].message)})
 
     useEffect(() => {
         if ( result.data ) {

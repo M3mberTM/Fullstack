@@ -4,6 +4,7 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from './components/Login.jsx'
 import {useApolloClient} from "@apollo/client";
+import Recommendations from "./components/Recommendations.jsx";
 
 const App = () => {
     const [page, setPage] = useState("authors");
@@ -25,8 +26,9 @@ const App = () => {
 
     const logout = () => {
         setToken(undefined)
-        localStorage.clear()
         client.resetStore().then()
+        localStorage.clear()
+        setPage('authors')
     }
 
     const notifyError = (message) => {
@@ -42,6 +44,7 @@ const App = () => {
                 {token &&
                     <span>
                         <button onClick={() => setPage("add")}>add book</button>
+                        <button onClick={() => setPage('recommend')}>recommend</button>
                         <button onClick={() => logout()}>logout</button>
                     </span>
                 }
@@ -53,7 +56,7 @@ const App = () => {
             <Authors show={page === "authors"} token={token}/>
 
             <Books show={page === "books"} />
-
+            <Recommendations show={ page==='recommend' }/>
             <NewBook show={page === "add"} notifyError={notifyError} />
             <Login show={page === 'login'} notifyError={notifyError} handleTokenAdd={handleTokenAdd}/>
         </div>
