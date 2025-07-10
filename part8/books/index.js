@@ -137,9 +137,7 @@ const resolvers = {
       }
       if (args.author) {
         const pickedAuthor = await Author.findOne({name: args.author})
-        console.log(pickedAuthor)
         bookFilter = {...bookFilter, author: pickedAuthor._id}
-        console.log(bookFilter)
       }
       return Book.find(bookFilter).populate('author')
     },
@@ -197,7 +195,7 @@ const resolvers = {
           }
         })
       }
-      return book
+      return book.populate('author')
     },
     editAuthor: async (root, args, {currentUser}) => {
       if (!currentUser) {
