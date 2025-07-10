@@ -14,7 +14,6 @@ export const ADD_BOOK = gql`
 export const ALL_BOOKS = gql`
   query {
     allBooks {
-      author
       published
       title
       id
