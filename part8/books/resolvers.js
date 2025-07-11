@@ -34,13 +34,6 @@ const resolvers = {
             return [...genres]
         }
     },
-    Author: {
-        bookCount: async (root) => {
-            const authorId = root._id
-            const authorBooks = await Book.find({author: authorId })
-            return authorBooks.length
-        }
-    },
     Mutation: {
         addBook: async (root, args, {currentUser}) => {
             if (!currentUser) {
@@ -53,7 +46,7 @@ const resolvers = {
             const currAuthor = await Author.findOne({name: args.author})
             let newAuthor = null
             if (!currAuthor) {
-                const author = Author({name: args.author})
+                const author = Author({name: args.author, bookCount: 1})
                 try {
                     await author.save()
                 } catch (error) {
@@ -67,6 +60,8 @@ const resolvers = {
                 }
                 newAuthor = author
             } else {
+                currAuthor.bookCount = currAuthor.bookCount + 1
+                await currAuthor.save()
                 newAuthor = currAuthor
             }
             const book = Book({...args, author: newAuthor._id})
