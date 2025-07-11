@@ -1,6 +1,6 @@
 import {useQuery} from "@apollo/client";
 import {ALL_BOOKS, ALL_GENRES} from "../queries.js";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const Books = (props) => {
   if (!props.show) {
@@ -9,9 +9,14 @@ const Books = (props) => {
   const [pickedGenre, setPickedGenre] = useState(null)
 
   const genreRequest = useQuery(ALL_GENRES)
-  const filteredBookRequest = useQuery(ALL_BOOKS, {variables: {genre: pickedGenre}})
+  const {loading, data, refetch} = useQuery(ALL_BOOKS, {variables: {genre: pickedGenre}})
+  const filteredBooks = data
 
-  if (!genreRequest.data || !filteredBookRequest.data) {
+  useEffect(() => {
+    refetch({genre: pickedGenre}).then()
+  }, [pickedGenre])
+
+  if (!genreRequest.data || !filteredBooks) {
     return (
         <div>loading...</div>
     )
@@ -30,7 +35,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBookRequest.data.allBooks.map((a) => (
+          {filteredBooks.allBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
