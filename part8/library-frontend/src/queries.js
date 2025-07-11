@@ -70,3 +70,17 @@ export const ALL_GENRES = gql`
         allGenres
     }
 `
+
+export const BOOK_ADDED = gql`
+    subscription {
+        bookAdded {
+            author {
+                name
+            }
+            title
+            published
+            genres
+            id
+        }
+    }
+`

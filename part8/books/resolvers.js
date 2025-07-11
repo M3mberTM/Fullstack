@@ -81,9 +81,9 @@ const resolvers = {
                     }
                 })
             }
-            book.populate('author')
-            pubsub.publish('BOOK_ADDED', {bookAdded: book})
-            return book
+            const finalBook = book.populate('author')
+            await pubsub.publish('BOOK_ADDED', {bookAdded: finalBook})
+            return finalBook
         },
         editAuthor: async (root, args, {currentUser}) => {
             if (!currentUser) {
