@@ -9,7 +9,7 @@ interface exerciseEvaluation {
     target: number,
     average: number
 }
-const calculateExercises = (dailyExercises: number[], targetAmount: number): exerciseEvaluation => {
+export const calculateExercises = (dailyExercises: number[], targetAmount: number): exerciseEvaluation => {
 
     const periodLength: number = dailyExercises.length;
     const trainingDays: number = dailyExercises.filter((exercise) => exercise > 0).length;
