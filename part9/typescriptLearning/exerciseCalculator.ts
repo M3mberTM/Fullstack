@@ -19,14 +19,14 @@ const calculateExercises = (dailyExercises: number[], targetAmount: number): exe
     let ratingDescription: string;
 
     if (average > targetAmount + 2) {
-        rating = 3
-        ratingDescription = 'Exceptional! You have surpassed the limit'
+        rating = 3;
+        ratingDescription = 'Exceptional! You have surpassed the limit';
     } else if (average < targetAmount ) {
-        rating = 1
-        ratingDescription = 'Not too bad but could be better'
+        rating = 1;
+        ratingDescription = 'Not too bad but could be better';
     } else {
-        rating = 2
-        ratingDescription = 'Hours are well kept'
+        rating = 2;
+        ratingDescription = 'Hours are well kept';
     }
 
     return {
@@ -40,5 +40,11 @@ const calculateExercises = (dailyExercises: number[], targetAmount: number): exe
     };
 };
 
-const inputs = extractArguments(process.argv);
-console.log(calculateExercises(inputs.slice(0, inputs.length-1), inputs[inputs.length-1]));
+if (require.main === module) {
+    const inputs = extractArguments(process.argv);
+    const days = inputs.slice(0, inputs.length-1) as number[];
+    const target = inputs[inputs.length-1];
+    if (typeof target === 'number') {
+        console.log(calculateExercises(days,target ));
+    }
+}
