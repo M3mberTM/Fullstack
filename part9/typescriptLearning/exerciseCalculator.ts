@@ -1,3 +1,4 @@
+import {extractArguments} from "./utils/utils";
 
 interface exerciseEvaluation {
     periodLength: number,
@@ -39,4 +40,5 @@ const calculateExercises = (dailyExercises: number[], targetAmount: number): exe
     };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const inputs = extractArguments(process.argv);
+console.log(calculateExercises(inputs.slice(0, inputs.length-1), inputs[inputs.length-1]));

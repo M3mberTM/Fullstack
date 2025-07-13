@@ -1,3 +1,5 @@
+import {extractArguments} from "./utils/utils";
+
 const calculateBmi = (height: number, mass: number): string => {
     const meterHeight = height / 100
     const bmi: number = mass / (meterHeight * meterHeight);
@@ -30,4 +32,5 @@ const calculateBmi = (height: number, mass: number): string => {
 
 }
 
-console.log(calculateBmi(180, 74))
+const inputs = extractArguments(process.argv);
+console.log(calculateBmi(inputs[0], inputs[1]));
