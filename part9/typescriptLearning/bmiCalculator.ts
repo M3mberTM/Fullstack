@@ -1,0 +1,33 @@
+const calculateBmi = (height: number, mass: number) => {
+    const meterHeight = height / 100
+    const bmi: number = mass / (meterHeight * meterHeight);
+    // bmi classes logic
+    if (Number.isNaN(bmi)) {
+        throw new Error('Something is wrong')
+    }
+    if (bmi < 16) {
+        return 'Underweight (Severe thinness)';
+    }
+    if (bmi < 17) {
+        return 'Underweight (Moderate thinness)';
+    }
+    if (bmi < 18.5) {
+        return 'Underweight (Mild thinness)';
+    }
+    if (bmi < 25) {
+        return 'Normal range';
+    }
+    if (bmi < 30) {
+        return 'Overweight (Pre-obese)';
+    }
+    if (bmi < 35) {
+        return 'Overweight (Pre-obese)';
+    }
+    if (bmi < 40) {
+        return 'Overweight (Pre-obese)';
+    }
+    return 'Overweight (Pre-obese)';
+
+}
+
+console.log(calculateBmi(180, 74))
