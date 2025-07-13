@@ -1,6 +1,6 @@
 import {extractArguments} from "./utils/utils";
 
-const calculateBmi = (height: number, mass: number): string => {
+export const calculateBmi = (height: number, mass: number): string => {
     const meterHeight = height / 100
     const bmi: number = mass / (meterHeight * meterHeight);
     // bmi classes logic
@@ -31,6 +31,9 @@ const calculateBmi = (height: number, mass: number): string => {
     return 'Overweight (Pre-obese)';
 
 }
-
-const inputs = extractArguments(process.argv);
-console.log(calculateBmi(inputs[0], inputs[1]));
+if (require.main === module) {
+    const inputs = extractArguments(process.argv);
+    if (typeof inputs[0] === 'number' && typeof inputs[1] === 'number') {
+        console.log(calculateBmi(inputs[0], inputs[1]));
+    }
+}
