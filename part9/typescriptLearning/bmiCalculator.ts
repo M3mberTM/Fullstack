@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, mass: number) => {
+const calculateBmi = (height: number, mass: number): string => {
     const meterHeight = height / 100
     const bmi: number = mass / (meterHeight * meterHeight);
     // bmi classes logic
