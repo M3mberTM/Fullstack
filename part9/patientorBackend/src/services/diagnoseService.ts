@@ -1,9 +1,9 @@
-import data from '../data/diagnoses'
+import data from '../data/diagnoses';
 
 const getAllEntries = () => {
-    return data
-}
+    return data;
+};
 
 export default {
     getAllEntries
-}
+};
