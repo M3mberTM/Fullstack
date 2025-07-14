@@ -1,4 +1,4 @@
-
+import {z} from 'zod';
 import express from 'express';
 import patientService from "../services/patientService";
 import {toNewPatient} from "../utils";
@@ -15,11 +15,11 @@ router.post('/', (req, res) => {
        const addedEntry = patientService.addPatient(newPatientEntry);
        res.json(addedEntry);
     } catch (e: unknown) {
-       if (e instanceof Error) {
-           res.status(400).send(e.message);
+       if (e instanceof z.ZodError) {
+           res.status(400).send({error: e.issues});
            return;
        }
-        res.sendStatus(400);
+        res.sendStatus(400).send({error: 'unknown error'});
     }
 });
 export default router;
