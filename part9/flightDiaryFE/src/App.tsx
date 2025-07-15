@@ -1,20 +1,28 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
-import {DiaryEntry} from "./types.ts";
+import {DiaryEntry, NewDiaryEntry} from "./types.ts";
 import Diaries from "./components/Diaries.tsx";
 import Header from "./components/Header.tsx";
+import DiaryForm from "./components/DiaryForm.tsx";
+import diaryService from './services/diaries.ts';
 
-const BASE_URL = 'http://localhost:3000/'
 function App() {
     const [diaries, setDiaries] = useState<DiaryEntry[]>([])
 
     useEffect(() => {
-        axios.get<DiaryEntry[]>(`${BASE_URL}api/diaries/`).then((response) => {
-            setDiaries(response.data);
-        })
+        diaryService.getAllEntries().then((content) => {setDiaries(content)})
     }, [])
+
+    const addNewDiary = (entry: NewDiaryEntry) => {
+        diaryService.addEntry(entry).then((content) => {
+            console.log(content);
+            const newDiaries = diaries.concat(content);
+            setDiaries(newDiaries);
+        })
+    }
+
     return (<div>
         <Header name={'Diaries'}/>
+        <DiaryForm addDiary={addNewDiary}/>
         <Diaries diaries={diaries}/>
     </div>)
 }
