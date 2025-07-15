@@ -24,8 +24,19 @@ const DiaryForm = (props: DiaryFormProps) => {
         <h3>Add new Entry</h3>
         <form onSubmit={submitHandler}>
             Date: <input type={'date'} name={'date'}/><br/>
-            Visibility: <input name={'visibility'}/><br/>
-            Weather: <input name={'weather'}/><br/>
+            Weather: <select name={'weather'}>
+            <option>sunny</option>
+            <option>rainy</option>
+            <option>cloudy</option>
+            <option>stormy</option>
+            <option>windy</option>
+        </select><br/>
+            Visibility: <select name={'visibility'}>
+            <option>great</option>
+            <option>good</option>
+            <option>ok</option>
+            <option>poor</option>
+        </select><br/>
             Comment: <input name={'comment'}/><br/>
             <button type={'submit'}>Submit</button>
         </form>
