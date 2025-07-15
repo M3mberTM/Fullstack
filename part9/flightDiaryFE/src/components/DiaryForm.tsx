@@ -16,8 +16,8 @@ const DiaryForm = (props: DiaryFormProps) => {
         const comment = data.comment.value;
         const diaryEntry = {
             date, visibility, weather, comment
-        }
-        props.addDiary(diaryEntry)
+        };
+        props.addDiary(diaryEntry);
     };
 
     return (<div>
@@ -29,7 +29,7 @@ const DiaryForm = (props: DiaryFormProps) => {
             Comment: <input name={'comment'}/><br/>
             <button type={'submit'}>Submit</button>
         </form>
-    </div>)
+    </div>);
 };
 
 export default DiaryForm;

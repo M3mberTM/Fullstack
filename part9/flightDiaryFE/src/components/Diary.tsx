@@ -9,7 +9,7 @@ const Diary = (props: DiaryProps) => {
         <h3>{diary.date}</h3>
         <p>Weather: {diary.weather}</p>
         <p>Visibility: {diary.visibility}</p>
-    </div>)
+    </div>);
 };
 
 export default Diary;
