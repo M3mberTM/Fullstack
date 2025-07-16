@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
-import {Patient, Gender} from "../types.ts";
+import {Patient, Gender, Diagnosis} from "../types.ts";
 import patientService from '../services/patients.ts';
+import diagnoseService from '../services/diagnoses.ts';
 import { Male, Female, Transgender } from '@mui/icons-material';
+import EntryList from "./EntryList.tsx";
 
 interface PatientInformationProps {
     patientId: string | undefined;
@@ -9,6 +11,7 @@ interface PatientInformationProps {
 const PatientInformation = (props: PatientInformationProps) => {
 
     const [patient, setPatient] = useState<Patient>();
+    const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
 
     const propsPatientId = props.patientId;
 
@@ -19,16 +22,18 @@ const PatientInformation = (props: PatientInformationProps) => {
     }
 
     useEffect(() => {
-        const fetchPatientInformation = async () => {
+        const fetchInformation = async () => {
             const patientInformation = await patientService.getById(propsPatientId);
+            const fetchedDiagnoses = await diagnoseService.getAll();
             setPatient(patientInformation);
+            setDiagnoses(fetchedDiagnoses);
         };
 
-        void fetchPatientInformation();
+        void fetchInformation();
     }, []);
 
 
-    if (!patient) {
+    if (!patient || !diagnoses) {
         return <div>
             Loading information
         </div>
@@ -43,11 +48,15 @@ const PatientInformation = (props: PatientInformationProps) => {
         genderIcon = <Transgender/>
     }
 
-    return (<div>
+
+
+    return <div>
         <h3>{patient.name} {genderIcon}</h3>
-        <p>ssh: {patient.ssn}</p>
+        <p>ssn: {patient.ssn}</p>
         <p>Occupation: {patient.occupation}</p>
-    </div>)
+        <h4>Entries</h4>
+        <EntryList entries={patient.entries} diagnoses={diagnoses}/>
+    </div>
 };
 
 export default PatientInformation;
