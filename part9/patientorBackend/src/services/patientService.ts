@@ -3,8 +3,8 @@ import data from '../data/patients';
 import {v1 as uuid} from 'uuid';
 
 const getAllEntries = (): Omit<Patient, 'ssn'>[] => {
-    return data.map(({id, name, dateOfBirth, gender, occupation}) => {
-        return {id, name, dateOfBirth, gender, occupation};
+    return data.map(({id, name, dateOfBirth, gender, occupation, entries}) => {
+        return {id, name, dateOfBirth, gender, occupation, entries};
     });
 };
 
@@ -15,7 +15,16 @@ const addPatient = (entry: NewPatient): Patient => {
     return newPatientEntry;
 };
 
+const getPatient = (id: string): Patient => {
+    const patient = data.find((entry) => entry.id === id);
+    if (!patient) {
+        throw new Error('No such patient');
+    }
+    return patient;
+};
+
 export default {
     getAllEntries,
-    addPatient
+    addPatient,
+    getPatient
 };

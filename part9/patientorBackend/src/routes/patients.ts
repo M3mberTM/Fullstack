@@ -22,4 +22,21 @@ router.post('/', (req, res) => {
         res.sendStatus(400).send({error: 'unknown error'});
     }
 });
+
+router.get('/:id', (req, res) => {
+    const params = req.params;
+    if (!params.id) {
+        res.status(400).send({error: 'No id provided'});
+    }
+    const id = params.id;
+    try {
+        const patient = patientService.getPatient(id);
+        res.json(patient);
+        return;
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(400).send({error: e.message});
+        }
+    }
+});
 export default router;
