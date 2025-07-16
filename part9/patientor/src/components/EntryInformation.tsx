@@ -1,4 +1,7 @@
 import {Diagnosis, Entry} from "../types.ts";
+import HospitalEntryInformation from "./entries/HospitalEntryInformation.tsx";
+import OccupationalHealthcareEntryInformation from "./entries/OccupationalHealthcareEntryInformation.tsx";
+import HealthCheckEntryInformation from "./entries/HealthCheckEntryInformation.tsx";
 
 interface EntryInformationProps {
     entry: Entry;
@@ -16,17 +19,27 @@ const EntryInformation = (props: EntryInformationProps) => {
             return diagnosis.name;
         }
     };
+    let fullDiagnoses: string[] = [];
+    if (entry.diagnosisCodes) {
+        fullDiagnoses = entry.diagnosisCodes.map((code) => `${code} ${getDiagnosis(code)}`);
+    }
+    const assertNever = (value: never): never => {
+        throw new Error(
+            `Unhandled discriminated union member: ${JSON.stringify(value)}`
+        );
+    };
 
-    return <div>
-        <strong>{entry.date} {entry.description}</strong>
-        {entry.diagnosisCodes &&
-            <ul>
-                {entry.diagnosisCodes.map((code) => {
-                    return <li key={code}>{code} {getDiagnosis(code)}</li>
-                })}
-            </ul>
-        }
-    </div>
+    switch(entry.type) {
+        case "Hospital":
+            return <HospitalEntryInformation entry={entry} fullDiagnoses={fullDiagnoses}/>;
+        case "OccupationalHealthcare":
+            return <OccupationalHealthcareEntryInformation entry={entry} fullDiagnoses={fullDiagnoses}/>;
+        case "HealthCheck":
+            return <HealthCheckEntryInformation entry={entry} fullDiagnoses={fullDiagnoses}/>;
+        default:
+            return assertNever(entry);
+    }
+
 };
 
 export default EntryInformation;
