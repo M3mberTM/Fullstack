@@ -1,7 +1,7 @@
 import {z} from 'zod';
 import express from 'express';
 import patientService from "../services/patientService";
-import {toNewPatient} from "../utils";
+import {toNewEntry, toNewPatient} from "../utils";
 
 const router = express.Router();
 
@@ -36,6 +36,31 @@ router.get('/:id', (req, res) => {
     } catch (e) {
         if (e instanceof Error) {
             res.status(400).send({error: e.message});
+        }
+    }
+});
+
+router.post('/:id/entries', (req, res) => {
+    const params = req.params;
+    if (!params.id) {
+        res.status(400).send({error: 'No id provided'});
+        return;
+    }
+    const id = params.id;
+    try {
+        const newEntry = toNewEntry(req.body);
+        const addedEntry = patientService.addPatientEntry(id, newEntry);
+        console.log(addedEntry);
+        res.json(addedEntry);
+        return;
+    } catch (e) {
+        if (e instanceof z.ZodError) {
+            res.status(400).send({error: e.issues});
+            return;
+        }
+        if (e instanceof Error) {
+            res.status(400).send({error: e.message});
+            return;
         }
     }
 });

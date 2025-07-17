@@ -11,6 +11,12 @@ export enum Gender {
     Other = 'other'
 }
 
+export enum EntryType {
+    Hospital = 'Hospital',
+    Occupational = 'OccupationalHealthcare',
+    HealthCheck = 'HealthCheck'
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface BaseEntry {
     id: string;
@@ -21,7 +27,7 @@ interface BaseEntry {
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {
-    type: 'OccupationalHealthcare';
+    type: EntryType.Occupational;
     employerName: string;
     sickLeave?: {
         startDate: string;
@@ -30,7 +36,7 @@ interface OccupationalHealthcareEntry extends BaseEntry {
 }
 
 interface HospitalEntry extends BaseEntry {
-    type: 'Hospital';
+    type: EntryType.Hospital;
     discharge: {
         date: string;
         criteria: string;
@@ -45,7 +51,7 @@ export enum HealthCheckRating {
 }
 
 interface HealthCheckEntry extends BaseEntry {
-    type: "HealthCheck";
+    type: EntryType.HealthCheck;
     healthCheckRating: HealthCheckRating;
 }
 
@@ -67,3 +73,7 @@ export interface Patient {
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatient = Omit<Patient, 'id'>;
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
+export type NewEntry = UnionOmit<Entry, 'id'>;
