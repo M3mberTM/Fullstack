@@ -23,11 +23,6 @@ const EntryInformation = (props: EntryInformationProps) => {
     if (entry.diagnosisCodes) {
         fullDiagnoses = entry.diagnosisCodes.map((code) => `${code} ${getDiagnosis(code)}`);
     }
-    const assertNever = (value: never): never => {
-        throw new Error(
-            `Unhandled discriminated union member: ${JSON.stringify(value)}`
-        );
-    };
 
     switch(entry.type) {
         case "Hospital":
@@ -37,7 +32,7 @@ const EntryInformation = (props: EntryInformationProps) => {
         case "HealthCheck":
             return <HealthCheckEntryInformation entry={entry} fullDiagnoses={fullDiagnoses}/>;
         default:
-            return assertNever(entry);
+            throw new Error('unknown entry type')
     }
 
 };

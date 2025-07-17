@@ -47,11 +47,11 @@ const HealthCheckEntryInformation = (props: HealthCheckEntryProps) => {
             break;
         case HealthCheckRating.HighRisk:
             rating = "High Risk";
-            ratingColor = {color: 'orange'};
+            ratingColor = {color: 'red'};
             break;
         case HealthCheckRating.CriticalRisk:
             rating = "Critical!";
-            ratingColor = {color: 'red'};
+            ratingColor = {color: 'black'};
             break;
         default:
             return assertNever(entry.healthCheckRating);

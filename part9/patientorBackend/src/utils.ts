@@ -11,9 +11,10 @@ const newPatientSchema = z.object({
 
 const newEntrySchema = z.object({
     date: z.string().date(),
-    specialist: z.string(),
+    specialist: z.string().min(2),
     description: z.string(),
     type: z.enum(EntryType),
+    diagnosisCodes: z.string().array().optional()
 });
 
 const HospitalEntrySchema = z.object({
@@ -21,6 +22,7 @@ const HospitalEntrySchema = z.object({
     specialist: z.string(),
     description: z.string(),
     type: z.literal(EntryType.Hospital),
+    diagnosisCodes: z.string().array().optional(),
     discharge: z.object({
         date: z.string().date(),
         criteria: z.string(),
@@ -32,6 +34,7 @@ const HealthCheckEntrySchema = z.object({
     specialist: z.string(),
     description: z.string(),
     type: z.literal(EntryType.HealthCheck),
+    diagnosisCodes: z.string().array().optional(),
     healthCheckRating: z.enum(HealthCheckRating),
 });
 
@@ -40,6 +43,7 @@ const OccupationalEntrySchema = z.object({
     specialist: z.string(),
     description: z.string(),
     type: z.literal(EntryType.Occupational),
+    diagnosisCodes: z.string().array().optional(),
     employerName: z.string(),
     sickLeave: z.object({
         startDate: z.string(),
@@ -61,6 +65,7 @@ export const toNewPatient = (object: unknown): NewPatient => {
 };
 
 export const toNewEntry = (object: unknown): NewEntry => {
+    console.log('Received entry: ', object);
     const newEntry = newEntrySchema.parse(object);
     if (typeof object === 'object') {
         // zod removes all the extra parameters, so I am adding them back in
