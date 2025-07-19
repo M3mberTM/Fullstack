@@ -7,7 +7,7 @@ const AppBarTab = ({title, link}) => {
     const styles = StyleSheet.create({
         container: {
             paddingLeft: 4,
-            paddingRight: 4
+            paddingRight: 4,
         },
     });
 
