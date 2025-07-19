@@ -12,7 +12,7 @@ const AppBarTab = ({title}) => {
 
     return (
     <Pressable style={styles.container}>
-        <Text color={'primary'} fontWeight={'bold'} fontSize={'subheading'}>{title}</Text>
+        <Text color={'heading'} fontWeight={'bold'} fontSize={'subheading'}>{title}</Text>
     </Pressable>
     )
 }

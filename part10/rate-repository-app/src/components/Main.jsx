@@ -1,10 +1,21 @@
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import RepositoryList from "./RepositoryList";
 import AppBar from "./AppBar";
+import theme from '../theme'
 
 const Main = () => {
+
+    const styles = StyleSheet.create({
+        container: {
+            backgroundColor: theme.colors.background,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column'
+        },
+    });
+
     return (
-        <View>
+        <View style={styles.container}>
             <AppBar/>
             <RepositoryList/>
         </View>

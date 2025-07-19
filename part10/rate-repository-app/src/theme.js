@@ -1,8 +1,13 @@
 const theme = {
     colors: {
-        textPrimary: '#fbfff5',
-        textSecondary: '#82967b',
+        headingPrimary: '#fbfff5',
+        headingSecondary: '#82967b',
+        textPrimary: '#000000',
+        textSecondary: '#3d3d3d',
         primary: '#24292e',
+        background: '#cccccc',
+        foreground: '#ffffff',
+        highlight: '#165eff'
     },
     fontSizes: {
         body: 14,
