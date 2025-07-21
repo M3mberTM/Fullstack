@@ -17,3 +17,12 @@ export const GET_REPOSITORIES = gql`query Repositories {
     }
   }
 }`
+
+export const ME = gql`
+query Me {
+    me {
+        id
+        username
+    }
+}   
+`
