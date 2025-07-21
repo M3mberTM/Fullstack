@@ -6,9 +6,7 @@ export const GET_REPOSITORIES = gql`query Repositories {
       node {
         language
         id
-        reviews {
-          totalCount
-        }
+        reviewCount
         stargazersCount
         forksCount
         ratingAverage
