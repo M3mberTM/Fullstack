@@ -4,10 +4,12 @@ import {Formik} from "formik";
 import theme from '../theme'
 import * as yup from 'yup'
 import useSignIn from "../hooks/useSignIn";
+import {useNavigate} from "react-router-native";
 
 
 const SignIn = () => {
     const [signIn] = useSignIn()
+    const navigate = useNavigate()
 
     const validationSchema = yup.object().shape({
         username: yup.string().min(3, 'Username must be longer than 2 characters').required('Username is required'),
@@ -62,7 +64,8 @@ const SignIn = () => {
         const {username, password} = values
         try {
             const { data } = await signIn({ username, password });
-            console.log(data);
+            console.log('Signing in: ', data);
+            navigate('/')
         } catch (e) {
             console.log(e);
         }
