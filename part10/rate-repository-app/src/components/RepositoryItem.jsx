@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
-import {View, StyleSheet, Image} from "react-native";
+import {View, StyleSheet, Image, Pressable} from "react-native";
 import Text from './typography/Text';
 import theme from '../theme'
 import Statistic from "./Statistic";
+import {useNavigate} from "react-router-native";
 
 
 const RepositoryItem = ({item}) => {
 
+    const navigate = useNavigate()
     const styles = StyleSheet.create({
         container: {
             backgroundColor: theme.colors.foreground,
@@ -46,23 +48,25 @@ const RepositoryItem = ({item}) => {
     const repository = item.item
 
     return <View testID={'repositoryItem'} style={styles.container}>
-        <View style={styles.repositoryInformation}>
-            <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
-            <View style={styles.basicInformation} testID={'repositoryInformation'}>
-                <Text fontSize={'subheading'} fontWeight={'bold'}>{repository.fullName}</Text>
-                <Text color={'textSecondary'}>{repository.description}</Text>
+        <Pressable onPress={() => navigate(`/${repository.id}`)}>
+            <View style={styles.repositoryInformation}>
+                <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
+                <View style={styles.basicInformation} testID={'repositoryInformation'}>
+                    <Text fontSize={'subheading'} fontWeight={'bold'}>{repository.fullName}</Text>
+                    <Text color={'textSecondary'}>{repository.description}</Text>
 
-                <View style={styles.codingLanguage}>
-                    <Text style={{color: 'white'}} fontWeight={'bold'}>{repository.language}</Text>
+                    <View style={styles.codingLanguage}>
+                        <Text style={{color: 'white'}} fontWeight={'bold'}>{repository.language}</Text>
+                    </View>
                 </View>
             </View>
-        </View>
-        <View style={styles.statistics}>
-            <Statistic title={'Stars'} amount={repository.stargazersCount}/>
-            <Statistic title={'Forks'} amount={repository.forksCount}/>
-            <Statistic title={'Reviews'} amount={repository.reviewCount}/>
-            <Statistic title={'Rating'} amount={repository.ratingAverage}/>
-        </View>
+            <View style={styles.statistics}>
+                <Statistic title={'Stars'} amount={repository.stargazersCount}/>
+                <Statistic title={'Forks'} amount={repository.forksCount}/>
+                <Statistic title={'Reviews'} amount={repository.reviewCount}/>
+                <Statistic title={'Rating'} amount={repository.ratingAverage}/>
+            </View>
+        </Pressable>
     </View>
 
 }
