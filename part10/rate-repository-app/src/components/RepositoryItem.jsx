@@ -45,10 +45,10 @@ const RepositoryItem = ({item}) => {
     });
     const repository = item.item
 
-    return <View style={styles.container}>
+    return <View testID={'repositoryItem'} style={styles.container}>
         <View style={styles.repositoryInformation}>
             <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
-            <View style={styles.basicInformation}>
+            <View style={styles.basicInformation} testID={'repositoryInformation'}>
                 <Text fontSize={'subheading'} fontWeight={'bold'}>{repository.fullName}</Text>
                 <Text color={'textSecondary'}>{repository.description}</Text>
 
