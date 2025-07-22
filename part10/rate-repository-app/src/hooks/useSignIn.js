@@ -10,8 +10,8 @@ const useSignIn = () => {
 
     const signIn = async ({ username, password }) => {
         // call the mutate function here with the right arguments
-        await mutate({variables: {credentials: {username, password}}})
-        const {data} = result
+        const mutationResult = await mutate({variables: {credentials: {username, password}}, fetchPolicy: 'network-only'})
+        const {data} = mutationResult
         const token = data.authenticate.accessToken
         await authStorage.setAccessToken(token)
         await client.resetStore()

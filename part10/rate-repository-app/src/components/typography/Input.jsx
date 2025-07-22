@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     }
 });
-const Input = ({placeholder, touched, error, value, handler, handleChange, handleBlur, multiline}) => {
+const Input = ({placeholder, touched, error, value, handler, handleChange, handleBlur, multiline, secure}) => {
 
     return <View style={styles.inputView}>
         <TextInput
@@ -38,6 +38,7 @@ const Input = ({placeholder, touched, error, value, handler, handleChange, handl
             onChangeText={handleChange(handler)}
             onBlur={handleBlur(handler)}
             multiline={multiline}
+            secureTextEntry={secure}
         />
         {error && touched && (
             <Text style={{color: theme.colors.error}}>{error}</Text>
