@@ -4,9 +4,6 @@ import Text from "./typography/Text";
 import RepositoryListContainer from "./RepositoryListContainer";
 
 const styles = StyleSheet.create({
-    separator: {
-        height: 10,
-    },
     container: {
         marginTop: 5,
     },
@@ -16,12 +13,8 @@ const styles = StyleSheet.create({
 });
 
 
-const ItemSeparator = () => <View style={styles.separator} />;
-
 const RepositoryList = () => {
     const { repositories, loading } = useRepositories();
-
-    // Get the nodes from the edges array
 
     if (loading) {
         return <View style={[styles.container, styles.loadingText]}>

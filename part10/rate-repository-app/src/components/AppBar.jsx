@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     flexDirection: 'row'
   },
-  // ...
 });
 
 const AppBar = () => {
@@ -24,10 +23,10 @@ const AppBar = () => {
   return <View style={styles.container}>
     <ScrollView horizontal>
       <AppBarTab title={'Repositories'} link={'/'}/>
-      {!data.me &&
+      {!data || !data.me &&
           <AppBarTab title={'Sign In'} link={'/signin'}/>
       }
-      {data.me &&
+      {data && data.me &&
           <SignOutTab/>
       }
     </ScrollView>
