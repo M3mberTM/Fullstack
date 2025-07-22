@@ -26,6 +26,20 @@ query Repository($repositoryId: ID!) {
     repository(id: $repositoryId) {
         url
         ...RepositoryInformation
+        reviews {
+            edges {
+                node {
+                    id
+                    text
+                    rating
+                    createdAt
+                    user {
+                        id
+                        username 
+                    } 
+                }
+            }
+        }
     }
 }    
 ${REPOSITORY_INFO}

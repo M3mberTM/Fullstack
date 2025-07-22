@@ -1,10 +1,11 @@
 import Text from "./typography/Text";
-import {Pressable, View, StyleSheet, Image} from "react-native";
+import {Pressable, View, StyleSheet, Image, FlatList, ScrollView} from "react-native";
 import useRepository from "../hooks/useRepository";
 import Statistic from "./Statistic";
 import theme from '../theme'
 import {useParams} from "react-router-native";
 import * as Linking from 'expo-linking';
+import RepositoryReview from "./RepositoryReview";
 
 const styles = StyleSheet.create({
     container: {
@@ -57,8 +58,21 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center',
         borderRadius: 7
+    },
+    separator: {
+        height: 10
+    },
+    reviews: {
+        marginTop: 10
+    },
+    main: {
+        flex: 1
     }
 });
+
+
+const ItemSeparator = () => <View style={styles.separator} />;
+
 const RepositoryInformation = () => {
     const {id} = useParams()
     const { repository, loading } = useRepository(id);
@@ -75,34 +89,40 @@ const RepositoryInformation = () => {
         </View>
     }
 
+    const reviewNodes = repository.reviews
+        ? repository.reviews.edges.map(edge => edge.node)
+        : [];
+
     const handleOpenLink = async () => {
-        console.log('trying to open the url: ', repository.url)
         await Linking.openURL(repository.url)
     }
 
-    return <View style={styles.container}>
-        <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
-        <View style={styles.repositoryInformation}>
-            <View style={styles.basicInformation} testID={'repositoryInformation'}>
-                <Text fontSize={'heading'} fontWeight={'bold'}>{repository.fullName}</Text>
-                <Text color={'textSecondary'}>{repository.description}</Text>
-                <View style={styles.codingLanguage}>
-                    <Text style={{color: 'white'}} fontWeight={'bold'}>{repository.language}</Text>
+    return <View style={styles.main}>
+            <View style={styles.container}>
+                <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
+                <View style={styles.repositoryInformation}>
+                    <View style={styles.basicInformation} testID={'repositoryInformation'}>
+                        <Text fontSize={'heading'} fontWeight={'bold'}>{repository.fullName}</Text>
+                        <Text color={'textSecondary'}>{repository.description}</Text>
+                        <View style={styles.codingLanguage}>
+                            <Text style={{color: 'white'}} fontWeight={'bold'}>{repository.language}</Text>
+                        </View>
+                    </View>
                 </View>
+                <View style={styles.statisticsText}>
+                    <Text fontSize={'heading'} fontWeight={'bold'}>Statistics</Text>
+                </View>
+                <View style={styles.statistics}>
+                    <Statistic title={'Stars'} amount={repository.stargazersCount}/>
+                    <Statistic title={'Forks'} amount={repository.forksCount}/>
+                    <Statistic title={'Reviews'} amount={repository.reviewCount}/>
+                    <Statistic title={'Rating'} amount={repository.ratingAverage}/>
+                </View>
+                <Pressable style={styles.openButton} onPress={handleOpenLink}>
+                    <Text style={{color: 'white'}} fontWeight={'bold'}>Open on Github</Text>
+                </Pressable>
             </View>
-        </View>
-        <View style={styles.statisticsText}>
-            <Text fontSize={'heading'} fontWeight={'bold'}>Statistics</Text>
-        </View>
-        <View style={styles.statistics}>
-            <Statistic title={'Stars'} amount={repository.stargazersCount}/>
-            <Statistic title={'Forks'} amount={repository.forksCount}/>
-            <Statistic title={'Reviews'} amount={repository.reviewCount}/>
-            <Statistic title={'Rating'} amount={repository.ratingAverage}/>
-        </View>
-        <Pressable style={styles.openButton} onPress={handleOpenLink}>
-            <Text style={{color: 'white'}} fontWeight={'bold'}>Open on Github</Text>
-        </Pressable>
+            <FlatList style={styles.reviews} data={reviewNodes} renderItem={(item) => <RepositoryReview review={item}/>} ItemSeparatorComponent={ItemSeparator}/>
     </View>
 }
 
