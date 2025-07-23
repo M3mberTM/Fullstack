@@ -1,5 +1,6 @@
-import { FlatList, View, StyleSheet, ScrollView } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import RepositoryItem from "./RepositoryItem";
+import FilterPicker from "./FilterPicker";
 
 const styles = StyleSheet.create({
     separator: {
@@ -15,7 +16,8 @@ const styles = StyleSheet.create({
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
-const RepositoryListContainer = ({repositories}) => {
+
+const RepositoryListContainer = ({repositories, filterValue, setFilterValue}) => {
 
     // Get the nodes from the edges array
     const repositoryNodes = repositories
@@ -29,6 +31,7 @@ const RepositoryListContainer = ({repositories}) => {
                     data={repositoryNodes}
                     ItemSeparatorComponent={ItemSeparator}
                     renderItem={(item) => <RepositoryItem item={item}/>}
+                    ListHeaderComponent={() => <FilterPicker value={filterValue} setValue={setFilterValue}/> }
                 />
         </View>
     );

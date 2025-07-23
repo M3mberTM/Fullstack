@@ -2,6 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import useRepositories from '../hooks/useRepositories';
 import Text from "./typography/Text";
 import RepositoryListContainer from "./RepositoryListContainer";
+import {useState} from "react";
 
 const styles = StyleSheet.create({
     container: {
@@ -14,7 +15,8 @@ const styles = StyleSheet.create({
 
 
 const RepositoryList = () => {
-    const { repositories, loading } = useRepositories();
+    const [filterVal, setFilterVal] = useState('createdAt')
+    const { repositories, loading } = useRepositories(filterVal);
 
     if (loading) {
         return <View style={[styles.container, styles.loadingText]}>
@@ -24,7 +26,7 @@ const RepositoryList = () => {
 
 
     return (
-        <RepositoryListContainer repositories={repositories}/>
+        <RepositoryListContainer repositories={repositories} setFilterValue={setFilterVal} filterValue={filterVal}/>
     );
 };
 
