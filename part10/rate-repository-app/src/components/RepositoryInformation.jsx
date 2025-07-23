@@ -71,11 +71,11 @@ const styles = StyleSheet.create({
 });
 
 
-const ItemSeparator = () => <View style={styles.separator} />;
+const ItemSeparator = () => <View style={styles.separator}/>;
 
 const RepositoryInformation = () => {
     const {id} = useParams()
-    const { repository, loading } = useRepository(id);
+    const {repository, loading, fetchMore} = useRepository({id, first: 4});
 
     if (loading) {
         return <View style={styles.loadingText}>
@@ -97,32 +97,37 @@ const RepositoryInformation = () => {
         await Linking.openURL(repository.url)
     }
 
+    const onEndReach = () => {
+        fetchMore()
+    }
+
     return <View style={styles.main}>
-            <View style={styles.container}>
-                <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
-                <View style={styles.repositoryInformation}>
-                    <View style={styles.basicInformation} testID={'repositoryInformation'}>
-                        <Text fontSize={'heading'} fontWeight={'bold'}>{repository.fullName}</Text>
-                        <Text color={'textSecondary'}>{repository.description}</Text>
-                        <View style={styles.codingLanguage}>
-                            <Text style={{color: 'white'}} fontWeight={'bold'}>{repository.language}</Text>
-                        </View>
+        <View style={styles.container}>
+            <Image style={styles.logo} source={{uri: repository.ownerAvatarUrl}}/>
+            <View style={styles.repositoryInformation}>
+                <View style={styles.basicInformation} testID={'repositoryInformation'}>
+                    <Text fontSize={'heading'} fontWeight={'bold'}>{repository.fullName}</Text>
+                    <Text color={'textSecondary'}>{repository.description}</Text>
+                    <View style={styles.codingLanguage}>
+                        <Text style={{color: 'white'}} fontWeight={'bold'}>{repository.language}</Text>
                     </View>
                 </View>
-                <View style={styles.statisticsText}>
-                    <Text fontSize={'heading'} fontWeight={'bold'}>Statistics</Text>
-                </View>
-                <View style={styles.statistics}>
-                    <Statistic title={'Stars'} amount={repository.stargazersCount}/>
-                    <Statistic title={'Forks'} amount={repository.forksCount}/>
-                    <Statistic title={'Reviews'} amount={repository.reviewCount}/>
-                    <Statistic title={'Rating'} amount={repository.ratingAverage}/>
-                </View>
-                <Pressable style={styles.openButton} onPress={handleOpenLink}>
-                    <Text style={{color: 'white'}} fontWeight={'bold'}>Open on Github</Text>
-                </Pressable>
             </View>
-            <FlatList style={styles.reviews} data={reviewNodes} renderItem={(item) => <RepositoryReview review={item} showRepoName={false}/>} ItemSeparatorComponent={ItemSeparator}/>
+            <View style={styles.statisticsText}>
+                <Text fontSize={'heading'} fontWeight={'bold'}>Statistics</Text>
+            </View>
+            <View style={styles.statistics}>
+                <Statistic title={'Stars'} amount={repository.stargazersCount}/>
+                <Statistic title={'Forks'} amount={repository.forksCount}/>
+                <Statistic title={'Reviews'} amount={repository.reviewCount}/>
+                <Statistic title={'Rating'} amount={repository.ratingAverage}/>
+            </View>
+            <Pressable style={styles.openButton} onPress={handleOpenLink}>
+                <Text style={{color: 'white'}} fontWeight={'bold'}>Open on Github</Text>
+            </Pressable>
+        </View>
+        <FlatList style={styles.reviews} data={reviewNodes} renderItem={(item) => <RepositoryReview review={item} showRepoName={false}/>}
+                  ItemSeparatorComponent={ItemSeparator} onEndReached={onEndReach} onEndReachedThreshold={0.5}/>
     </View>
 }
 

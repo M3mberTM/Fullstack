@@ -2,17 +2,18 @@ import { useQuery } from '@apollo/client';
 
 import { GET_REPOSITORIES } from '../graphql/queries';
 
-const useRepositories = (filterVal, searchVal) => {
-  let variables
+const useRepositories = (config) => {
+  const {filterVal, searchVal} = config
+  let variables = {first: config.first}
   switch(filterVal) {
     case 'createdAt':
-      variables = {orderBy: 'CREATED_AT', orderDirection: 'DESC'}
+      variables = {...variables, orderBy: 'CREATED_AT', orderDirection: 'DESC'}
       break
     case 'ratingAsc':
-      variables = {orderBy: 'RATING_AVERAGE', orderDirection: 'ASC'}
+      variables = {...variables, orderBy: 'RATING_AVERAGE', orderDirection: 'ASC'}
       break
     case 'ratingDesc':
-      variables = {orderBy: 'RATING_AVERAGE', orderDirection: 'DESC'}
+      variables = {...variables, orderBy: 'RATING_AVERAGE', orderDirection: 'DESC'}
       break
     default:
       variables = {}
@@ -22,9 +23,24 @@ const useRepositories = (filterVal, searchVal) => {
     variables = {...variables, searchKeyword: searchVal}
   }
 
-  const {data, loading} = useQuery(GET_REPOSITORIES, {fetchPolicy: 'cache-and-network', variables})
+  const {data, loading, fetchMore} = useQuery(GET_REPOSITORIES, {fetchPolicy: 'cache-and-network', variables})
   const repositories = loading ? undefined : data.repositories
-  return {repositories, loading}
+
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
+  return {repositories, loading, fetchMore: handleFetchMore}
 };
 
 export default useRepositories;

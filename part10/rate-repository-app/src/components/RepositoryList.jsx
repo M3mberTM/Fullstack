@@ -20,7 +20,7 @@ const RepositoryList = () => {
     const [searchVal, setSearchVal] = useState('')
     const [debouncedSearch] = useDebounce(searchVal, 500)
 
-    const {repositories, loading} = useRepositories(filterVal, debouncedSearch);
+    const {repositories, loading, fetchMore} = useRepositories({filterVal, searchVal: debouncedSearch, first: 8});
 
     if (loading) {
         return <View style={[styles.container, styles.loadingText]}>
@@ -28,10 +28,15 @@ const RepositoryList = () => {
         </View>
     }
 
+    const onEndReach = () => {
+        console.log('End reached')
+        fetchMore()
+    }
+
 
     return (
         <RepositoryListContainer repositories={repositories} setFilterValue={setFilterVal} filterValue={filterVal} setSearchVal={setSearchVal}
-                                 searchVal={searchVal}/>
+                                 searchVal={searchVal} onEndReach={onEndReach}/>
     );
 };
 
