@@ -1,6 +1,7 @@
-import { FlatList, View, StyleSheet } from 'react-native';
+import {FlatList, View, StyleSheet} from 'react-native';
 import RepositoryItem from "./RepositoryItem";
-import FilterPicker from "./FilterPicker";
+import RepositoryFilter from "./RepositoryFilter";
+import React from "react";
 
 const styles = StyleSheet.create({
     separator: {
@@ -15,26 +16,36 @@ const styles = StyleSheet.create({
     },
 });
 
-const ItemSeparator = () => <View style={styles.separator} />;
+const ItemSeparator = () => <View style={styles.separator}/>;
 
-const RepositoryListContainer = ({repositories, filterValue, setFilterValue}) => {
+class RepositoryListContainer extends React.Component {
+    renderHeader = () => {
+        const props = this.props
 
-    // Get the nodes from the edges array
-    const repositoryNodes = repositories
-        ? repositories.edges.map(edge => edge.node)
-        : [];
+        return (
+            <RepositoryFilter filterVal={props.filterValue} setFilterVal={props.setFilterValue} searchVal={props.searchVal}
+                                                             setSearchVal={props.setSearchVal}/>
+        )
+    }
 
 
-    return (
-        <View style={styles.container}>
+    render() {
+        const props = this.props
+        // Get the nodes from the edges array
+        const repositoryNodes = props.repositories
+            ? props.repositories.edges.map(edge => edge.node)
+            : [];
+        return (
+            <View style={styles.container}>
                 <FlatList
                     data={repositoryNodes}
                     ItemSeparatorComponent={ItemSeparator}
                     renderItem={(item) => <RepositoryItem item={item}/>}
-                    ListHeaderComponent={() => <FilterPicker value={filterValue} setValue={setFilterValue}/> }
+                    ListHeaderComponent={this.renderHeader}
                 />
-        </View>
-    );
+            </View>
+        );
+}
 }
 
 export default RepositoryListContainer

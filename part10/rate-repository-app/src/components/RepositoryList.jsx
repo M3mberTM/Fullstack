@@ -1,8 +1,9 @@
-import { View, StyleSheet } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import useRepositories from '../hooks/useRepositories';
 import Text from "./typography/Text";
 import RepositoryListContainer from "./RepositoryListContainer";
 import {useState} from "react";
+import {useDebounce} from "use-debounce";
 
 const styles = StyleSheet.create({
     container: {
@@ -16,7 +17,10 @@ const styles = StyleSheet.create({
 
 const RepositoryList = () => {
     const [filterVal, setFilterVal] = useState('createdAt')
-    const { repositories, loading } = useRepositories(filterVal);
+    const [searchVal, setSearchVal] = useState('')
+    const [debouncedSearch] = useDebounce(searchVal, 500)
+
+    const {repositories, loading} = useRepositories(filterVal, debouncedSearch);
 
     if (loading) {
         return <View style={[styles.container, styles.loadingText]}>
@@ -26,7 +30,8 @@ const RepositoryList = () => {
 
 
     return (
-        <RepositoryListContainer repositories={repositories} setFilterValue={setFilterVal} filterValue={filterVal}/>
+        <RepositoryListContainer repositories={repositories} setFilterValue={setFilterVal} filterValue={filterVal} setSearchVal={setSearchVal}
+                                 searchVal={searchVal}/>
     );
 };
 
