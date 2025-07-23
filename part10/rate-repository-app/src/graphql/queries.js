@@ -13,10 +13,22 @@ export const GET_REPOSITORIES = gql`query Repositories($orderBy: AllRepositories
 ${REPOSITORY_INFO}`
 
 export const ME = gql`
-query Me {
+query Me($includeReviews: Boolean = false) {
     me {
         id
         username
+        reviews @include(if: $includeReviews) {
+            edges {
+                node {
+                    text
+                    createdAt
+                    rating
+                    repository {
+                        fullName
+                    }
+                } 
+            }
+        }
     }
 }   
 `

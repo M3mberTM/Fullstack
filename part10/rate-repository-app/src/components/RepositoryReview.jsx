@@ -25,17 +25,17 @@ const styles = StyleSheet.create({
     }
 })
 
-const RepositoryReview = ({review}) => {
+const RepositoryReview = ({review, showRepoName}) => {
 
     const reviewItem = review.item
     const createdAt = new Date(reviewItem.createdAt).toLocaleDateString()
-    const username = reviewItem.user.username
+    const name = showRepoName ? reviewItem.repository.fullName : reviewItem.user.username
     return <View style={styles.container}>
         <View style={styles.rating}>
             <Text fontWeight={'bold'} style={{color: theme.colors.highlight}}>{reviewItem.rating}</Text>
         </View>
         <View style={styles.ratingInfo}>
-            <Text fontWeight={'bold'}>{username}</Text>
+            <Text fontWeight={'bold'}>{name}</Text>
             <Text color={'textSecondary'}>{createdAt}</Text>
             <Text>{reviewItem.text}</Text>
         </View>

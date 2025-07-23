@@ -8,6 +8,8 @@ const AppBarTab = ({title, link}) => {
         container: {
             paddingLeft: 4,
             paddingRight: 4,
+            marginLeft: 6,
+            marginRight: 6,
         },
     });
 

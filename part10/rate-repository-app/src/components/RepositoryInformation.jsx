@@ -122,7 +122,7 @@ const RepositoryInformation = () => {
                     <Text style={{color: 'white'}} fontWeight={'bold'}>Open on Github</Text>
                 </Pressable>
             </View>
-            <FlatList style={styles.reviews} data={reviewNodes} renderItem={(item) => <RepositoryReview review={item}/>} ItemSeparatorComponent={ItemSeparator}/>
+            <FlatList style={styles.reviews} data={reviewNodes} renderItem={(item) => <RepositoryReview review={item} showRepoName={false}/>} ItemSeparatorComponent={ItemSeparator}/>
     </View>
 }
 

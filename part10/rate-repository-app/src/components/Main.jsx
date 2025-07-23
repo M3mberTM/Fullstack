@@ -7,6 +7,7 @@ import SignIn from "./SignIn";
 import RepositoryInformation from "./RepositoryInformation";
 import ReviewForm from "./ReviewForm";
 import SignUp from "./SignUp";
+import MyReviews from "./MyReviews";
 
 const Main = () => {
 
@@ -27,6 +28,7 @@ const Main = () => {
                 <Route path={'/'} element={<RepositoryList/>}/>
                 <Route path={'/signin'} element={<SignIn/>}/>
                 <Route path={'/review'} element={<ReviewForm/>}/>
+                <Route path={'/myreviews'} element={<MyReviews/>}/>
                 <Route path={'/signup'} element={<SignUp/>}/>
                 <Route path={'/:id'} element={<RepositoryInformation/>}/>
                 <Route path={'*'} element={<Navigate to={'/'} replace/>}/>
